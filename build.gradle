@@ -1,7 +1,7 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.3'
-	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.springframework.boot' version '3.5.3' apply false
+	id 'io.spring.dependency-management' version '1.1.7' apply false
 }
 
 group = 'club.cmc.limber'
@@ -13,39 +13,84 @@ java {
 	}
 }
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
-
-repositories {
-	mavenCentral()
-}
-
 ext {
 	set('springModulithVersion', "1.4.1")
 }
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.modulith:spring-modulith-starter-core'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'io.spring.dependency-management'
 
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.modulith:spring-modulith-bom:${springModulithVersion}"
+	group = rootProject.group
+	version = rootProject.version
+
+	repositories {
+		mavenCentral()
+	}
+
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(17)
+		}
+	}
+
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.3"
+			mavenBom "org.springframework.modulith:spring-modulith-bom:${springModulithVersion}"
+		}
+	}
+
+	dependencies {
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
+		testCompileOnly 'org.projectlombok:lombok'
+		testAnnotationProcessor 'org.projectlombok:lombok'
+
+		implementation 'org.slf4j:slf4j-api'
+	}
+
+	tasks.withType(Test).configureEach {
+		useJUnitPlatform()
 	}
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+project(':core') {
+	apply plugin: 'org.springframework.boot'
+
+	dependencies {
+		implementation project(':user')
+//		implementation project(':admin')
+//		implementation project(':application')
+//		implementation project(':notification')
+//		implementation project(':score')
+//		implementation project(':school')
+
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+
+		testImplementation('org.springframework.boot:spring-boot-starter-test') {
+			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+		}
+	}
+}
+
+project(':common') {
+	apply plugin: 'java-library'
+
+	dependencies {
+		api 'org.springframework:spring-context'
+		api 'org.springframework:spring-context-support'
+		api 'org.springframework.boot:spring-boot-starter-web'
+	}
+}
+
+project(':user') {
+	dependencies {
+		implementation project(':common')
+
+		testImplementation('org.springframework.boot:spring-boot-starter-test') {
+			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+		}
+		testImplementation 'org.springframework.security:spring-security-test'
+	}
 }
