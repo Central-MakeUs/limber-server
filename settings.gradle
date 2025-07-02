@@ -1,1 +1,3 @@
 rootProject.name = 'limber'
+
+include 'core', 'common', 'user'
