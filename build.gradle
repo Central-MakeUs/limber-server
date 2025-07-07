@@ -60,6 +60,7 @@ project(':core') {
 
 	dependencies {
 		implementation project(':user')
+		implementation project(':oauth')
 //		implementation project(':admin')
 //		implementation project(':application')
 //		implementation project(':notification')
@@ -68,9 +69,7 @@ project(':core') {
 
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 
-		testImplementation('org.springframework.boot:spring-boot-starter-test') {
-			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-		}
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	}
 }
 
@@ -81,16 +80,46 @@ project(':common') {
 		api 'org.springframework:spring-context'
 		api 'org.springframework:spring-context-support'
 		api 'org.springframework.boot:spring-boot-starter-web'
+		api 'org.springframework.boot:spring-boot-starter-webflux'
+		api 'com.fasterxml.jackson.core:jackson-databind'
+	}
+}
+
+project(':global') {
+	apply plugin: 'java-library'
+
+	dependencies {
+		api 'org.springframework:spring-context'
+		api 'org.springframework:spring-context-support'
+		api 'org.springframework.boot:spring-boot-starter-web'
+		api 'org.springframework.boot:spring-boot-starter-webflux'
+		api 'com.fasterxml.jackson.core:jackson-databind'
+		api 'jakarta.validation:jakarta.validation-api' // 예외 처리 시 유효성 검증 대응
+
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	}
 }
 
 project(':user') {
 	dependencies {
 		implementation project(':common')
+		implementation project(':global')
 
-		testImplementation('org.springframework.boot:spring-boot-starter-test') {
-			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-		}
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testImplementation 'org.springframework.security:spring-security-test'
+	}
+}
+
+
+project(':oauth') {
+	dependencies {
+		implementation project(':common')
+		implementation project(':global')
+
+		implementation 'org.springframework.boot:spring-boot-starter-security'
+		implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 		testImplementation 'org.springframework.security:spring-security-test'
 	}
 }

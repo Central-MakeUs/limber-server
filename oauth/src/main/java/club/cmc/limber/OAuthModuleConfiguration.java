@@ -6,6 +6,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.beans.BeanProperty;
@@ -13,18 +14,18 @@ import java.beans.BeanProperty;
 @Slf4j
 @Configuration
 @EnableConfigurationProperties
-public class UserModuleConfiguration extends ModuleConfiguration {
+public class OAuthModuleConfiguration extends ModuleConfiguration {
 
     @Override
     @BeanProperty
-    @ConfigurationProperties("limber.user-module")
+    @ConfigurationProperties(prefix = "limber.oauth-module")
     public ModuleNameInfo moduleInfoProperties() {
         return new ModuleNameInfo();
     }
 
     @PostConstruct
     public void debugProperties() {
-        log.info("moduleNameInfo.name = {}", moduleInfoProperties().getName());
+        log.info("moduleNameInfo.name = {}", moduleInfoProperties().toString());
     }
 
 }

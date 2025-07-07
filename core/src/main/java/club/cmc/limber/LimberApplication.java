@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = "club.cmc.limber.integrate")
 public class LimberApplication {
 
-    public static final String PROPS_CONFIG_NAME = "spring.config.name: core, user";
+    public static final String PROPS_CONFIG_NAME = "spring.config.name: core, user, oauth";
 
     public static void main(String[] args) {
         SpringApplication application = new LimberApplicationBuilder(LimberApplication.class)

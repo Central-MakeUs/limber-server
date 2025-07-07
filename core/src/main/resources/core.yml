@@ -1,0 +1,40 @@
+server:
+  port: 8888
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/limberdb
+    username: limber
+    password: limber1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+################################################################################
+# WebClient config
+################################################################################
+webclient:
+  connection-timeout-millisecond: 100000
+  read-timeout-second: 100
+  write-timeout-second: 100
+  connection:
+    provider:
+      name: postmanProvider
+      max-connections: 1000
+      pending-acquire-max-count: -1
+      pending-acquire-timeout-second: 100
+  memory:
+    max-in-memory-size-of-byte: 52428800
+  block:
+    timeout-of-millis: 100000
+
+################################################################################
+# OAuth config
+################################################################################
+oauth:
+  kakao:
+    client-id: e529d41c1cb110e350bbae3b4d471874
+    redirect-uri: http://localhost:8080/login/oauth2/code/kakao
