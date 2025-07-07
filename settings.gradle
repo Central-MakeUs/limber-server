@@ -2,4 +2,5 @@ rootProject.name = 'limber'
 
 include 'core', 'common', 'user'
 include 'oauth'
+include 'global'
 
