@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class KakaoOAuthProperties {
+
     private String clientId;
     private String redirectUri;
+
 }
 

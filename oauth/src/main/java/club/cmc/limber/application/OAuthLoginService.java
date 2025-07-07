@@ -1,5 +1,6 @@
 package club.cmc.limber.application;
 
+import club.cmc.limber.domain.OAuthProvider;
 import club.cmc.limber.domain.OAuthUserInfo;
 import club.cmc.limber.infrastructure.KakaoOAuthClient;
 import club.cmc.limber.infrastructure.KakaoOAuthUserInfoResponse;
@@ -17,7 +18,7 @@ public class OAuthLoginService {
         KakaoOAuthUserInfoResponse response = kakaoOAuthClient.getUserInfo(accessToken);
 
         return new OAuthUserInfo(
-                "kakao",
+                OAuthProvider.KAKAO,
                 String.valueOf(response.getId()),
                 response.getEmail(),
                 response.getNickname()
