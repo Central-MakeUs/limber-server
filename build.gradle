@@ -58,7 +58,15 @@ subprojects {
 project(':core') {
 	apply plugin: 'org.springframework.boot'
 
+	bootJar {
+		archiveFileName = 'app.jar'
+		mainClass = 'club.cmc.limber.LimberApplication'
+	}
+
 	dependencies {
+		implementation project(':common')
+		implementation project(':global')
+
 		implementation project(':user')
 		implementation project(':oauth')
 //		implementation project(':admin')
@@ -94,7 +102,14 @@ project(':global') {
 		api 'org.springframework.boot:spring-boot-starter-web'
 		api 'org.springframework.boot:spring-boot-starter-webflux'
 		api 'com.fasterxml.jackson.core:jackson-databind'
-		api 'jakarta.validation:jakarta.validation-api' // 예외 처리 시 유효성 검증 대응
+		api 'jakarta.validation:jakarta.validation-api'
+
+		// JPA 및 JDBC 관련 의존성
+		api 'org.springframework.boot:spring-boot-starter-data-jpa'     // EntityManager 등 포함
+		api 'org.springframework.boot:spring-boot-starter-jdbc'         // AbstractRoutingDataSource 포함
+
+		// PostgreSQL JDBC 드라이버
+		runtimeOnly 'org.postgresql:postgresql'
 
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	}

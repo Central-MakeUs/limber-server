@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @ToString
 public class OAuthUserInfo {
-    private String provider;
+    private OAuthProvider provider;
     private String providerId;
     private String email;
     private String nickname;
