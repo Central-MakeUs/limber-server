@@ -74,6 +74,7 @@ public class LimberApplicationBuilder {
 
     private static List<Class<?>> getModuleConfiguration() {
         return List.of(
+                // TODO
                 club.cmc.limber.OAuthModuleConfiguration.class,
                 club.cmc.limber.UserModuleConfiguration.class
                 // 여기에 필요한 모듈 추가
