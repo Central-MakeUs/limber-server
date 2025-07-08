@@ -59,17 +59,25 @@ public class LimberApplicationBuilder {
         return registeredModules.contains(clazz);
     }
 
-    @SneakyThrows
+//    @SneakyThrows
+//    private static List<Class<?>> getModuleConfiguration() {
+//        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+//        assert classLoader != null;
+//
+//        String path = MODULE_CONFIGURATION_PATH.replace('.', '/');
+//        URL directoryUrl = classLoader.getResource(path);
+//        assert directoryUrl != null;
+//
+//        File directory = new File(directoryUrl.toURI());
+//        return new ArrayList<>(findClasses(directory, MODULE_CONFIGURATION_PATH));
+//    }
+
     private static List<Class<?>> getModuleConfiguration() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        assert classLoader != null;
-
-        String path = MODULE_CONFIGURATION_PATH.replace('.', '/');
-        URL directoryUrl = classLoader.getResource(path);
-        assert directoryUrl != null;
-
-        File directory = new File(directoryUrl.toURI());
-        return new ArrayList<>(findClasses(directory, MODULE_CONFIGURATION_PATH));
+        return List.of(
+                club.cmc.limber.OAuthModuleConfiguration.class,
+                club.cmc.limber.UserModuleConfiguration.class
+                // 여기에 필요한 모듈 추가
+        );
     }
 
     private static List<Class<?>> findClasses(File directory, String packageName) throws ClassNotFoundException {
