@@ -1,6 +1,5 @@
 rootProject.name = 'limber'
 
-include 'core', 'common', 'user'
-include 'oauth'
-include 'global'
+include 'global', 'common'
+include 'core', 'user', 'oauth'
 

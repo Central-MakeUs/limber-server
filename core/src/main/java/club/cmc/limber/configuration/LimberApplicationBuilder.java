@@ -1,12 +1,10 @@
 package club.cmc.limber.configuration;
 
-import lombok.SneakyThrows;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
 import java.io.File;
-import java.net.URL;
 import java.util.*;
 
 public class LimberApplicationBuilder {
@@ -33,7 +31,8 @@ public class LimberApplicationBuilder {
 
     public void registerModules() {
         getModuleConfiguration().forEach(this::registerDependency);
-        springBuilder = springBuilder.sibling(WebApplicationConfigure.class).web(WebApplicationType.SERVLET);
+        springBuilder = springBuilder.sources(WebApplicationConfigure.class).web(WebApplicationType.SERVLET);
+//        springBuilder = springBuilder.sibling(WebApplicationConfigure.class).web(WebApplicationType.SERVLET);
     }
 
     private void registerDependency(Class<?> module) {
@@ -74,6 +73,7 @@ public class LimberApplicationBuilder {
 
     private static List<Class<?>> getModuleConfiguration() {
         return List.of(
+                // TODO
                 club.cmc.limber.OAuthModuleConfiguration.class,
                 club.cmc.limber.UserModuleConfiguration.class
                 // 여기에 필요한 모듈 추가

@@ -1,0 +1,17 @@
+spring:
+  ################################################################################
+  # Database config
+  ################################################################################
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/limberdb
+    username: limber
+    password: limber1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true

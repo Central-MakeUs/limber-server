@@ -9,18 +9,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "spring.datasource")
 public class DataSourceProperties {
 
+    private String url;
+    private String username;
+    private String password;
     private String driverClassName;
-
-    private DataSourceDetail write;
-    private DataSourceDetail read;
-
-    @Getter
-    @Setter
-    public static class DataSourceDetail {
-        private String url;
-        private String username;
-        private String password;
-    }
 }
+
 
 

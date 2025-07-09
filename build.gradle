@@ -78,6 +78,7 @@ project(':core') {
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 	}
 }
 
@@ -97,6 +98,8 @@ project(':global') {
 	apply plugin: 'java-library'
 
 	dependencies {
+		implementation project(':common')
+
 		api 'org.springframework:spring-context'
 		api 'org.springframework:spring-context-support'
 		api 'org.springframework.boot:spring-boot-starter-web'
@@ -107,6 +110,7 @@ project(':global') {
 		// JPA 및 JDBC 관련 의존성
 		api 'org.springframework.boot:spring-boot-starter-data-jpa'     // EntityManager 등 포함
 		api 'org.springframework.boot:spring-boot-starter-jdbc'         // AbstractRoutingDataSource 포함
+		api 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
 
 		// PostgreSQL JDBC 드라이버
 		runtimeOnly 'org.postgresql:postgresql'
