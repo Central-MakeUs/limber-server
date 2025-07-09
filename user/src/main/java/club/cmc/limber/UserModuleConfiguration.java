@@ -12,7 +12,7 @@ public class UserModuleConfiguration extends ModuleConfiguration {
     @Bean("userModuleNameInfo")
     @ConfigurationProperties(prefix = "limber.user-module")
     public ModuleNameInfo moduleNameInfo() {
-        return new ModuleNameInfo(); // setter로 바인딩됨
+        return new ModuleNameInfo("user-module"); // setter로 바인딩됨
     }
 
     @Override

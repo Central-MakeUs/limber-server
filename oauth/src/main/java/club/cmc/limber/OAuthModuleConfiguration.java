@@ -12,7 +12,7 @@ public class OAuthModuleConfiguration extends ModuleConfiguration {
     @Bean("oAuthModuleNameInfo")
     @ConfigurationProperties(prefix = "limber.oauth-module")
     public ModuleNameInfo moduleNameInfo() {
-        return new ModuleNameInfo(); // setter로 바인딩됨
+        return new ModuleNameInfo("oauth-module"); // setter로 바인딩됨
     }
 
     @Override
