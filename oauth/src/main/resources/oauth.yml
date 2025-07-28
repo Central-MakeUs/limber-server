@@ -1,3 +1,8 @@
 limber:
   oauth-module:
     name: 'Oauth Module'
+
+jwt:
+  secret: your-super-secret-key-change-this-to-env
+  access-expiration: 900000         # 15분 (밀리초 단위)
+  refresh-expiration: 1209600000    # 14일 (밀리초 단위)

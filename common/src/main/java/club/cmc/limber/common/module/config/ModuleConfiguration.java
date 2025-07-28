@@ -2,14 +2,27 @@ package club.cmc.limber.common.module.config;
 
 import club.cmc.limber.common.context.beans.PublishedComponentRegisteringPostProcessor;
 import club.cmc.limber.common.module.info.ModuleNameInfo;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 
 @Slf4j
 public abstract class ModuleConfiguration implements ApplicationRunner {
+
+
+    @PostConstruct
+    public void init() {
+        var context = ApplicationContextHolder.getContext();
+        if (context != null) {
+            System.out.println("[Module Init] Context ID = " + context.getId());
+        } else {
+            System.out.println("[Module Init] Context is NOT initialized yet.");
+        }
+    }
 
     public abstract ModuleNameInfo moduleInfoProperties();
 

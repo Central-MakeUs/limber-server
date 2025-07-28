@@ -20,6 +20,9 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
 
 ################################################################################
 # WebClient config
@@ -50,3 +53,9 @@ oauth:
 logging:
   level:
     org.springframework.boot.context.config: DEBUG
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs

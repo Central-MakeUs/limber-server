@@ -77,6 +77,9 @@ project(':core') {
 
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 
+		// ✅ Swagger/OpenAPI UI
+		implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	}
@@ -88,7 +91,7 @@ project(':common') {
 	dependencies {
 		api 'org.springframework:spring-context'
 		api 'org.springframework:spring-context-support'
-		api 'org.springframework.boot:spring-boot-starter-web'
+//		api 'org.springframework.boot:spring-boot-starter-web'
 		api 'org.springframework.boot:spring-boot-starter-webflux'
 		api 'com.fasterxml.jackson.core:jackson-databind'
 	}
@@ -134,9 +137,14 @@ project(':oauth') {
 	dependencies {
 		implementation project(':common')
 		implementation project(':global')
+		implementation project(':user')
 
 		implementation 'org.springframework.boot:spring-boot-starter-security'
 		implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+		implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+		runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+		runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // JSON 처리용
 
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 		testImplementation 'org.springframework.security:spring-security-test'
