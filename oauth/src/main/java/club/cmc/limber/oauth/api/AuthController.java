@@ -1,12 +1,13 @@
 package club.cmc.limber.oauth.api;
 
-import club.cmc.limber.oauth.application.OAuthLoginService;
 import club.cmc.limber.oauth.application.TokenService;
-import club.cmc.limber.oauth.domain.OAuthUserInfo;
 import club.cmc.limber.oauth.domain.TokenPair;
 import club.cmc.limber.oauth.dto.TokenRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/users")
