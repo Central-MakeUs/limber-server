@@ -9,9 +9,9 @@ import java.time.ZonedDateTime;
 
 @Repository
 @RequiredArgsConstructor
-public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
+public class UserTokenRepositoryImpl implements UserTokenRepository {
 
-    private final RefreshTokenJpaRepository jpaRepository;
+    private final UserTokenJpaRepository jpaRepository;
 
     @Override
     public void save(Long userId, String token, long expiresInMillis) {

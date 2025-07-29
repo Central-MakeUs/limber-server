@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/users")
-public class AuthController {
+public class OAuthLoginController {
 
-    private final TokenService tokenService;
+    private final OAuthLoginService oAuthLoginService;
 
-    public AuthController(TokenService tokenService) {
-        this.tokenService = tokenService;
+    public OAuthLoginController(OAuthLoginService oAuthLoginService) {
+        this.oAuthLoginService = oAuthLoginService;
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<TokenPair> refresh(@RequestBody TokenRequest request) {
-        TokenPair tokenPair = tokenService.refreshAccessToken(request.refreshToken());
-        return ResponseEntity.ok(tokenPair);
+    @GetMapping("/kakao")
+    public ResponseEntity<OAuthUserInfo> loginWithKakao(@RequestParam String code) {
+        OAuthUserInfo userInfo = oAuthLoginService.loginWithKakao(code);
+        return ResponseEntity.ok(userInfo);
     }
 
 }
