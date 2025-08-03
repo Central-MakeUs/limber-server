@@ -1,0 +1,56 @@
+server:
+  port: 8888
+
+spring:
+  profiles:
+#    active: ${SPRING_PROFILES_ACTIVE:local}
+    active: local
+  jpa:
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+
+################################################################################
+# WebClient config
+################################################################################
+webclient:
+  connection-timeout-millisecond: 100000
+  read-timeout-second: 100
+  write-timeout-second: 100
+  connection:
+    provider:
+      name: postmanProvider
+      max-connections: 1000
+      pending-acquire-max-count: -1
+      pending-acquire-timeout-second: 100
+  memory:
+    max-in-memory-size-of-byte: 52428800
+  block:
+    timeout-of-millis: 100000
+
+################################################################################
+# OAuth config
+################################################################################
+oauth:
+  kakao:
+    client-id: e529d41c1cb110e350bbae3b4d471874
+    redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+
+logging:
+  level:
+    org.springframework.boot.context.config: DEBUG
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+################################################################################
+# JWT config
+################################################################################
+jwt:
+  secret: your-super-secret-key-change-this-to-env
+  access-expiration: 900000         # 15분 (밀리초 단위)
+  refresh-expiration: 1209600000    # 14일 (밀리초 단위)

@@ -1,10 +1,10 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.3' apply false
-	id 'io.spring.dependency-management' version '1.1.7' apply false
+	id 'org.springframework.boot' version '3.5.4'
+	id 'io.spring.dependency-management' version '1.1.7'
 }
 
-group = 'club.cmc.limber'
+group = 'club.cmc'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -13,140 +13,47 @@ java {
 	}
 }
 
-ext {
-	set('springModulithVersion', "1.4.1")
+bootJar {
+	archiveFileName = 'app.jar'
 }
 
-subprojects {
-	apply plugin: 'java'
-	apply plugin: 'io.spring.dependency-management'
-
-	group = rootProject.group
-	version = rootProject.version
-
-	repositories {
-		mavenCentral()
-	}
-
-	java {
-		toolchain {
-			languageVersion = JavaLanguageVersion.of(17)
-		}
-	}
-
-	dependencyManagement {
-		imports {
-			mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.3"
-			mavenBom "org.springframework.modulith:spring-modulith-bom:${springModulithVersion}"
-		}
-	}
-
-	dependencies {
-		compileOnly 'org.projectlombok:lombok'
-		annotationProcessor 'org.projectlombok:lombok'
-		testCompileOnly 'org.projectlombok:lombok'
-		testAnnotationProcessor 'org.projectlombok:lombok'
-
-		implementation 'org.slf4j:slf4j-api'
-	}
-
-	tasks.withType(Test).configureEach {
-		useJUnitPlatform()
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
 	}
 }
 
-project(':core') {
-	apply plugin: 'org.springframework.boot'
-
-	bootJar {
-		archiveFileName = 'app.jar'
-		mainClass = 'club.cmc.limber.LimberApplication'
-	}
-
-	dependencies {
-		implementation project(':common')
-		implementation project(':global')
-
-		implementation project(':user')
-		implementation project(':oauth')
-//		implementation project(':admin')
-//		implementation project(':application')
-//		implementation project(':notification')
-//		implementation project(':score')
-//		implementation project(':school')
-
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-
-		// ✅ Swagger/OpenAPI UI
-		implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-	}
+repositories {
+	mavenCentral()
 }
 
-project(':common') {
-	apply plugin: 'java-library'
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	dependencies {
-		api 'org.springframework:spring-context'
-		api 'org.springframework:spring-context-support'
-//		api 'org.springframework.boot:spring-boot-starter-web'
-		api 'org.springframework.boot:spring-boot-starter-webflux'
-		api 'com.fasterxml.jackson.core:jackson-databind'
-	}
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'         // AbstractRoutingDataSource 포함
+	implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+	implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'org.springframework:spring-context'
+	implementation 'jakarta.validation:jakarta.validation-api'
+	implementation 'org.springframework:spring-context-support'
+
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'org.postgresql:postgresql:42.5.4'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-project(':global') {
-	apply plugin: 'java-library'
-
-	dependencies {
-		implementation project(':common')
-
-		api 'org.springframework:spring-context'
-		api 'org.springframework:spring-context-support'
-		api 'org.springframework.boot:spring-boot-starter-web'
-		api 'org.springframework.boot:spring-boot-starter-webflux'
-		api 'com.fasterxml.jackson.core:jackson-databind'
-		api 'jakarta.validation:jakarta.validation-api'
-
-		// JPA 및 JDBC 관련 의존성
-		api 'org.springframework.boot:spring-boot-starter-data-jpa'     // EntityManager 등 포함
-		api 'org.springframework.boot:spring-boot-starter-jdbc'         // AbstractRoutingDataSource 포함
-		api 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
-
-		// PostgreSQL JDBC 드라이버
-		runtimeOnly 'org.postgresql:postgresql'
-
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	}
-}
-
-project(':user') {
-	dependencies {
-		implementation project(':common')
-		implementation project(':global')
-
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-		testImplementation 'org.springframework.security:spring-security-test'
-	}
-}
-
-
-project(':oauth') {
-	dependencies {
-		implementation project(':common')
-		implementation project(':global')
-		implementation project(':user')
-
-		implementation 'org.springframework.boot:spring-boot-starter-security'
-		implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
-		implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-		runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-		runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // JSON 처리용
-
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-		testImplementation 'org.springframework.security:spring-security-test'
-	}
+tasks.named('test') {
+	useJUnitPlatform()
 }

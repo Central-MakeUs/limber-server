@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/limberdb
+    username: limber
+    password: limber1234
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    properties:
+      hibernate.jdbc.lob.non_contextual_creation: true
+      hibernate.show_sql: true
+      hibernate.format_sql: true

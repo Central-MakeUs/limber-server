@@ -1,0 +1,8 @@
+package club.cmc.limber.domain.timerretrospect.repository;
+
+import club.cmc.limber.domain.timerretrospect.entity.TimerRetrospect;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface TimerRetrospectRepository extends JpaRepository<TimerRetrospect, Long> {
+}
+
