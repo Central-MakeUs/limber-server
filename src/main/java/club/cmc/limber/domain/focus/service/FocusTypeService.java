@@ -9,6 +9,5 @@ import java.util.List;
 public interface FocusTypeService {
     FocusTypeResponseDto createFocusType(FocusTypeRequestDto dto);
     List<FocusTypeResponseDto> getFocusTypesByUserId(Long userId);
-
     List<FocusType> getFilteredFocusTypes(Long userId);
 }
