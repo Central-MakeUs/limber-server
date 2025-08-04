@@ -59,10 +59,25 @@ public class JwtTokenProvider {
         return claims.getSubject();  // 사용자 ID (setSubject로 넣은 값)
     }
 
+    public CustomUserDetails extractUserDetails(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        Long userId = Long.valueOf(claims.getSubject());
+        String email = claims.get("email", String.class);        // 클레임에 포함된 경우
+        String nickname = claims.get("nickname", String.class);  // 클레임에 포함된 경우
+
+        return new CustomUserDetails(userId, email, nickname);
+    }
+
     public String createAccessToken(User user) {
         return Jwts.builder()
                 .setSubject(String.valueOf(user.getId()))
                 .claim("email", user.getEmail())
+                .claim("nickname", user.getNickname())
                 .setExpiration(new Date(System.currentTimeMillis() + accessExpiration))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();

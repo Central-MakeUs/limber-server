@@ -42,10 +42,14 @@ logging:
     org.springframework.boot.context.config: DEBUG
 
 springdoc:
+  override-with-generic-response: false
   swagger-ui:
     path: /swagger-ui.html
+    enabled: true
   api-docs:
     path: /v3/api-docs
+    enabled: true
+
 
 ################################################################################
 # JWT config

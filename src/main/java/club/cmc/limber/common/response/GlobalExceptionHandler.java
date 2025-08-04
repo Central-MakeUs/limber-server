@@ -5,12 +5,13 @@ import club.cmc.limber.common.exception.ErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.stream.Collectors;
 
-@RestControllerAdvice
+@RestControllerAdvice(annotations = {RestController.class}, basePackages = {"club.cmc.limber"})
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)

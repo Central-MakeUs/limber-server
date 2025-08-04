@@ -11,9 +11,5 @@ public interface TimerRepository extends JpaRepository<Timer, Long> {
 
     List<Timer> findByUserIdAndDelFlag(Long userId, String delFlag);
 
-    List<Timer> findByFocusType_Id(Long focusTypeId);
-
-    List<Timer> findByStartDeBetweenAndUserId(LocalDateTime start, LocalDateTime end, Long userId);
-
     List<Timer> findByUserIdAndStatusAndDelFlag(Long userId, String status, String delFlag);
 }

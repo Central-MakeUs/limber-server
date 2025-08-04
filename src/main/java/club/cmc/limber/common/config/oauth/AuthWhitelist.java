@@ -7,9 +7,15 @@ public class AuthWhitelist {
             "/api/auth/login",
             "/api/auth/register",
             "/api/public",
-            "*/swagger-ui/*",
+            "/*/swagger-ui/*",
+            "/swagger-ui/index.html",
             "/v3/api-docs",
             "/error",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/webjars/**",
             "/favicon.ico"
+
     );
 }

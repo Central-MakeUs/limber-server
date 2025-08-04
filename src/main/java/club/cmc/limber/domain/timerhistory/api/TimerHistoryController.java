@@ -1,15 +1,15 @@
 package club.cmc.limber.domain.timerhistory.api;
 
-import club.cmc.limber.domain.focus.dto.FocusTypeRequestDto;
-import club.cmc.limber.domain.focus.dto.FocusTypeResponseDto;
-import club.cmc.limber.domain.focus.service.FocusTypeService;
 import club.cmc.limber.domain.timerhistory.dto.TimerHistoryResponseDto;
 import club.cmc.limber.domain.timerhistory.service.TimerHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -25,8 +25,10 @@ public class TimerHistoryController {
     }
 
     @Operation(summary = "사용자별 타이머 이력 조회")
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<TimerHistoryResponseDto>> getHistoriesByUserId(@PathVariable Long userId) {
+    @GetMapping("/me")
+    public ResponseEntity<List<TimerHistoryResponseDto>> getHistoriesByUserId(
+            @AuthenticationPrincipal Long userId
+    ) {
         return ResponseEntity.ok(timerHistoryService.getHistoriesByUserId(userId));
     }
 }
