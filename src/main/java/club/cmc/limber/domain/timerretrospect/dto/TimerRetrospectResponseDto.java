@@ -8,7 +8,8 @@ public record TimerRetrospectResponseDto(
         Long timerId,
         Long userId,
         Integer immersion,
-        String comment
+        String comment,
+        String delFlag
 ) {
     public static TimerRetrospectResponseDto from(TimerRetrospect entity) {
         return new TimerRetrospectResponseDto(
@@ -17,7 +18,8 @@ public record TimerRetrospectResponseDto(
                 entity.getTimerId(),
                 entity.getUserId(),
                 entity.getImmersion(),
-                entity.getComment()
+                entity.getComment(),
+                entity.getDelFlag()
         );
     }
 }

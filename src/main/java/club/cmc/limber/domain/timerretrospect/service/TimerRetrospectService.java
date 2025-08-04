@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface TimerRetrospectService {
     TimerRetrospectResponseDto saveRetrospect(Long userId, TimerRetrospectRequestDto dto);
+    TimerRetrospectResponseDto deleteTimerRetrospect(Long timerRetrospectId);
 }
