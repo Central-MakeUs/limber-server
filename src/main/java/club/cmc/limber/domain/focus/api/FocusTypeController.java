@@ -2,6 +2,7 @@ package club.cmc.limber.domain.focus.api;
 
 import club.cmc.limber.domain.focus.dto.FocusTypeRequestDto;
 import club.cmc.limber.domain.focus.dto.FocusTypeResponseDto;
+import club.cmc.limber.domain.focus.entity.FocusType;
 import club.cmc.limber.domain.focus.service.FocusTypeService;
 import club.cmc.limber.domain.security.dto.TokenPair;
 import club.cmc.limber.domain.security.dto.TokenRequest;
@@ -32,9 +33,10 @@ public class FocusTypeController {
     }
 
     @Operation(summary = "유저의 집중유형 목록 조회")
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<FocusTypeResponseDto>> getFocusTypesByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(focusTypeService.getFocusTypesByUserId(userId));
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<FocusType>> getFocusTypes(@PathVariable Long userId) {
+        List<FocusType> results = focusTypeService.getFilteredFocusTypes(userId);
+        return ResponseEntity.ok(results);
     }
 }
 

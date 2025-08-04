@@ -25,7 +25,7 @@ public class FocusTypeServiceImpl implements FocusTypeService {
         FocusType focusType = new FocusType();
         focusType.setUserId(dto.userId());
         focusType.setTitle(dto.title());
-        focusType.setDefaultFlag(dto.defaultFlag());
+        focusType.setDefaultFlag("N");
         focusType.setDelFlag("N");
         focusType.setSequence(dto.sequence());
         focusType.setRegDt(LocalDateTime.now());
@@ -42,6 +42,11 @@ public class FocusTypeServiceImpl implements FocusTypeService {
                 .stream()
                 .map(this::toResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FocusType> getFilteredFocusTypes(Long userId) {
+        return focusTypeRepository.findCustomFocusTypes(userId);
     }
 
     private FocusTypeResponseDto toResponseDto(FocusType focusType) {
