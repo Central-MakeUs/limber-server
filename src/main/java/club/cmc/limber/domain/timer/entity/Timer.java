@@ -2,6 +2,7 @@ package club.cmc.limber.domain.timer.entity;
 
 import club.cmc.limber.domain.focus.entity.FocusType;
 import club.cmc.limber.domain.timer.enums.RepeatCycleCode;
+import club.cmc.limber.domain.timer.enums.TimerCode;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,6 +32,10 @@ public class Timer {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FOCUS_TYPE_ID", nullable = false)
     private FocusType focusType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TIMER_CODE", nullable = false, length = 20)
+    private TimerCode timerCode;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "REPEAT_CYCLE_CODE", nullable = false, length = 20)

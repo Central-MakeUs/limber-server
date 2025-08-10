@@ -36,6 +36,7 @@ public class TimerServiceImpl implements TimerService {
         Timer timer = new Timer();
         timer.setUserId(dto.userId());
         timer.setTitle(dto.title());
+        timer.setTimerCode(dto.timerCode());
         timer.setFocusType(focusType);
         timer.setRepeatCycleCode(dto.repeatCycleCode());
         timer.setRepeatDays(dto.repeatDays());

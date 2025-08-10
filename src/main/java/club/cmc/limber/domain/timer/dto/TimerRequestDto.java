@@ -1,6 +1,7 @@
 package club.cmc.limber.domain.timer.dto;
 
 import club.cmc.limber.domain.timer.enums.RepeatCycleCode;
+import club.cmc.limber.domain.timer.enums.TimerCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -26,6 +27,11 @@ public record TimerRequestDto(
         @NotNull
         @Schema(description = "집중 유형 ID", example = "7", requiredMode = Schema.RequiredMode.REQUIRED)
         Long focusTypeId,
+
+        @NotNull
+        @Schema(description = "타이머 타입 코드", example = "IMMEDIATE", requiredMode = Schema.RequiredMode.REQUIRED,
+                allowableValues = {"IMMEDIATE", "SCHEDULED"})
+        TimerCode timerCode,
 
         @NotNull
         @Schema(description = "반복 주기 코드", example = "WEEKLY", requiredMode = Schema.RequiredMode.REQUIRED,
