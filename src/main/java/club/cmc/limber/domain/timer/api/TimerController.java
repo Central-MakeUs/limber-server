@@ -17,11 +17,14 @@ import java.util.List;
 
 @Tag(name = "타이머 API", description = "타이머 예약 및 상태 관리 기능 제공")
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/timers")
 public class TimerController {
 
     private final TimerService timerService;
+
+    public TimerController(TimerService timerService) {
+        this.timerService = timerService;
+    }
 
     @Operation(
             summary = "타이머 즉시 시작",
@@ -32,22 +35,7 @@ public class TimerController {
             }
     )
     @PostMapping
-    public ResponseEntity<TimerResponseDto> createImmediateTimer(
-            @RequestBody TimerRequestDto dto
-    ) {
-        return ResponseEntity.ok(timerService.createTimer(dto));
-    }
-
-    @Operation(
-            summary = "타이머 예약 시작",
-            description = "지정된 시간대에 타이머가 동작하도록 예약합니다.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-                    @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content)
-            }
-    )
-    @PostMapping
-    public ResponseEntity<TimerResponseDto> createScheduledTimer(
+    public ResponseEntity<TimerResponseDto> createTimer(
             @RequestBody TimerRequestDto dto
     ) {
         return ResponseEntity.ok(timerService.createTimer(dto));
