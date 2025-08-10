@@ -5,7 +5,6 @@ import club.cmc.limber.domain.timer.dto.TimerResponseDto;
 import club.cmc.limber.domain.timer.dto.TimerStatusUpdateDto;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 

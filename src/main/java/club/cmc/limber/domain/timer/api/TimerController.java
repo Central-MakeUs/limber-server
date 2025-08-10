@@ -6,6 +6,8 @@ import club.cmc.limber.domain.timer.dto.TimerStatusUpdateDto;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
 import club.cmc.limber.domain.timer.service.TimerService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +23,33 @@ public class TimerController {
 
     private final TimerService timerService;
 
-    @Operation(summary = "타이머 생성")
+    @Operation(
+            summary = "타이머 즉시 시작",
+            description = "요청 즉시 타이머를 시작합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content)
+            }
+    )
     @PostMapping
-    public ResponseEntity<TimerResponseDto> createTimer(@RequestBody TimerRequestDto dto) {
+    public ResponseEntity<TimerResponseDto> createImmediateTimer(
+            @RequestBody TimerRequestDto dto
+    ) {
+        return ResponseEntity.ok(timerService.createTimer(dto));
+    }
+
+    @Operation(
+            summary = "타이머 예약 시작",
+            description = "지정된 시간대에 타이머가 동작하도록 예약합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content)
+            }
+    )
+    @PostMapping
+    public ResponseEntity<TimerResponseDto> createScheduledTimer(
+            @RequestBody TimerRequestDto dto
+    ) {
         return ResponseEntity.ok(timerService.createTimer(dto));
     }
 

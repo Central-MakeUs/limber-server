@@ -36,7 +36,7 @@ public class Timer {
     @Column(name = "REPEAT_CYCLE_CODE", nullable = false, length = 20)
     private RepeatCycleCode repeatCycleCode;
 
-    @Column(name = "REPEAT_DAYS", nullable = false, length = 20)
+    @Column(name = "REPEAT_DAYS", length = 20)
     private String repeatDays;
 
     @Column(name = "START_TIME", nullable = false, columnDefinition = "time(0)")
