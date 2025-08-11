@@ -58,6 +58,7 @@ public class TimerServiceImpl implements TimerService {
         timer.setEndTime(dto.endTime());
         timer.setStatus(TimerStatus.READY);
         timer.setDelFlag("N");
+        timer.setRegId(dto.userId());
 
         Timer saved = timerRepository.save(timer);
         return toResponseDto(saved);

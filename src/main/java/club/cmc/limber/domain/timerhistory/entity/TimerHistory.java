@@ -4,6 +4,8 @@ import club.cmc.limber.domain.timer.enums.RepeatCycleCode;
 import club.cmc.limber.domain.timerhistory.enums.HistoryStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -65,12 +67,14 @@ public class TimerHistory {
     @Column(name = "DEL_FLAG", nullable = false)
     private String delFlag = "N";
 
+    @CreationTimestamp
     @Column(name = "REG_DT", nullable = false)
     private LocalDateTime regDt;
 
     @Column(name = "REG_ID", nullable = false)
     private String regId;
 
+    @UpdateTimestamp
     @Column(name = "UPD_DT")
     private LocalDateTime updDt;
 

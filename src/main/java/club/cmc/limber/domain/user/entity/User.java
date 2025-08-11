@@ -2,6 +2,8 @@ package club.cmc.limber.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -37,12 +39,14 @@ public class User {
     @Column(name = "FCM_KEY", length = 255)
     private String fcmKey;  // FCM KEY (푸시 알림용)
 
+    @CreationTimestamp
     @Column(name = "REG_DT", nullable = false)
     private LocalDateTime regDt;  // 등록시간
 
     @Column(name = "REG_ID", length = 50, nullable = false)
     private String regId;  // 등록자
 
+    @UpdateTimestamp
     @Column(name = "UPD_DT")
     private LocalDateTime updDt;  // 수정시간
 

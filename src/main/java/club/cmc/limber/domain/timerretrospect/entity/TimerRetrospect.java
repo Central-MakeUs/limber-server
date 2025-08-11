@@ -2,6 +2,8 @@ package club.cmc.limber.domain.timerretrospect.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -39,12 +41,14 @@ public class TimerRetrospect {
     @Column(name = "DEL_FLAG", nullable = false)
     private String delFlag = "N";
 
+    @CreationTimestamp
     @Column(name = "REG_DT", nullable = false)
     private LocalDateTime regDt;
 
     @Column(name = "REG_ID", nullable = false)
     private String regId;
 
+    @UpdateTimestamp
     @Column(name = "UPD_DT")
     private LocalDateTime updDt;
 

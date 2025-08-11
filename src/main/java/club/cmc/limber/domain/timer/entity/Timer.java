@@ -6,6 +6,8 @@ import club.cmc.limber.domain.timer.enums.TimerCode;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -57,15 +59,17 @@ public class Timer {
     @Column(name = "DEL_FLAG", nullable = false, length = 1)
     private String delFlag = "N";
 
+    @CreationTimestamp
     @Column(name = "REG_DT", nullable = false)
     private LocalDateTime regDt;
 
-    @Column(name = "REG_ID", nullable = false, length = 50)
+    @Column(name = "REG_ID", nullable = false, length = 255)
     private String regId;
 
+    @UpdateTimestamp
     @Column(name = "UPD_DT")
     private LocalDateTime updDt;
 
-    @Column(name = "UPD_ID", length = 50)
+    @Column(name = "UPD_ID", length = 255)
     private String updId;
 }

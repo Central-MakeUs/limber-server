@@ -2,6 +2,8 @@ package club.cmc.limber.domain.focus.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -32,12 +34,14 @@ public class FocusType {
     @Column(name = "SEQUENCE", nullable = false)
     private int sequence = 0;
 
+    @CreationTimestamp
     @Column(name = "REG_DT", nullable = false)
     private LocalDateTime regDt;
 
     @Column(name = "REG_ID", nullable = false, length = 50)
     private String regId;
 
+    @UpdateTimestamp
     @Column(name = "UPD_DT")
     private LocalDateTime updDt;
 
