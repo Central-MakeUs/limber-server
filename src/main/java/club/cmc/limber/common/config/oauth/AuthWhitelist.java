@@ -16,7 +16,7 @@ public class AuthWhitelist {
             "/swagger-resources/**",
             "/webjars/**",
             "/favicon.ico",
-            "/api/*"
+            "/api/**"
 
     );
 }
