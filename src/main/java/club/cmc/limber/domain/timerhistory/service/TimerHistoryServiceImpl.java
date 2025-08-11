@@ -1,15 +1,18 @@
 package club.cmc.limber.domain.timerhistory.service;
 
-import club.cmc.limber.domain.timerhistory.dto.TimerHistoryRequestDto;
-import club.cmc.limber.domain.timerhistory.dto.TimerHistoryResponseDto;
+import club.cmc.limber.domain.timer.enums.RepeatCycleCode;
+import club.cmc.limber.domain.timerhistory.dto.*;
+import club.cmc.limber.domain.timerhistory.dto.analytics.FailReasonCountDto;
+import club.cmc.limber.domain.timerhistory.dto.analytics.FocusDistributionDto;
 import club.cmc.limber.domain.timerhistory.entity.TimerHistory;
+import club.cmc.limber.domain.timerhistory.enums.HistoryStatus;
 import club.cmc.limber.domain.timerhistory.repository.TimerHistoryRepository;
 import club.cmc.limber.domain.timerretrospect.repository.TimerRetrospectRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.time.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service

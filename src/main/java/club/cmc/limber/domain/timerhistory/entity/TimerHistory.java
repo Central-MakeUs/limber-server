@@ -56,6 +56,12 @@ public class TimerHistory {
     @Column(name = "END_TIME", nullable = false)
     private LocalTime endTime;
 
+    @Column(name = "ACUTAL_START_TIME", nullable = false)
+    private LocalDateTime actualStartTime;
+
+    @Column(name = "ACUTAL_END_TIME")
+    private LocalDateTime actualEndTime;
+
     @Column(name = "DEL_FLAG", nullable = false)
     private String delFlag = "N";
 
