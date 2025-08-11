@@ -7,6 +7,7 @@ import club.cmc.limber.domain.timer.dto.TimerRequestDto;
 import club.cmc.limber.domain.timer.dto.TimerResponseDto;
 import club.cmc.limber.domain.timer.dto.TimerStatusUpdateDto;
 import club.cmc.limber.domain.timer.entity.Timer;
+import club.cmc.limber.domain.timer.enums.TimerCode;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
 import club.cmc.limber.domain.timer.repository.TimerRepository;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,19 @@ public class TimerServiceImpl implements TimerService {
     public TimerResponseDto createTimer(TimerRequestDto dto) {
         FocusType focusType = focusTypeRepository.findById(dto.focusTypeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 집중 유형 타입입니다."));
+
+        // IMMEDIATE 타입만 조회하여 개수 제한
+        if (TimerCode.IMMEDIATE.equals(dto.timerCode())) {
+            long immediateCount = timerRepository.countByUserIdAndDelFlagAndTimerCode(
+                    dto.userId(),
+                    "N",
+                    TimerCode.IMMEDIATE
+            );
+
+            if (immediateCount >= 10) {
+                throw new IllegalStateException("지금 시작은 최대 10개까지만 등록할 수 있습니다.");
+            }
+        }
 
         Timer timer = new Timer();
         timer.setUserId(dto.userId());

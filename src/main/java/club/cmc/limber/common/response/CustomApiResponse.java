@@ -5,31 +5,31 @@ import club.cmc.limber.common.exception.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class ApiResponse<T> {
+public class CustomApiResponse<T> {
     private final boolean success;
     private final T data;
     private final ErrorResponse error;
 
-    private ApiResponse(boolean success, T data, ErrorResponse error) {
+    private CustomApiResponse(boolean success, T data, ErrorResponse error) {
         this.success = success;
         this.data = data;
         this.error = error;
     }
 
-    public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(true, data, null);
+    public static <T> CustomApiResponse<T> success(T data) {
+        return new CustomApiResponse<>(true, data, null);
     }
 
-    public static ApiResponse<Void> success() {
-        return new ApiResponse<>(true, null, null);
+    public static CustomApiResponse<Void> success() {
+        return new CustomApiResponse<>(true, null, null);
     }
 
-    public static ApiResponse<Void> fail(ErrorCode code) {
-        return new ApiResponse<>(false, null, new ErrorResponse(code));
+    public static CustomApiResponse<Void> fail(ErrorCode code) {
+        return new CustomApiResponse<>(false, null, new ErrorResponse(code));
     }
 
-    public static ApiResponse<Void> fail(ErrorCode code, String customMessage) {
-        return new ApiResponse<>(false, null, new ErrorResponse(code, customMessage));
+    public static CustomApiResponse<Void> fail(ErrorCode code, String customMessage) {
+        return new CustomApiResponse<>(false, null, new ErrorResponse(code, customMessage));
     }
 
     @Getter
