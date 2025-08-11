@@ -10,5 +10,5 @@ public interface TimerHistoryService {
 
     TimerHistoryResponseDto saveHistory(TimerHistoryRequestDto dto);
 
-    List<TimerHistoryResponseDto> getHistoriesByUserId(Long userId);
+    List<TimerHistoryResponseDto> getHistoriesByUserId(String userId);
 }

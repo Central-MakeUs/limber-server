@@ -1,5 +1,6 @@
 package club.cmc.limber.domain.security.dto;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,19 +9,16 @@ import java.util.Objects;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final Long id;
+    // 생성자 및 필수 메서드 구현 생략
+    @Getter
+    private final String id;
     private final String email;
     private final String nickname;
 
-    public CustomUserDetails(Long id, String email, String nickname) {
+    public CustomUserDetails(String id, String email, String nickname) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
-    }
-
-    // 생성자 및 필수 메서드 구현 생략
-    public Long getId() {
-        return id;
     }
 
     @Override

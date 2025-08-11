@@ -10,7 +10,7 @@ import java.time.LocalTime;
 public record TimerHistoryResponseDto(
         Long id,
         Long timerId,
-        Long userId,
+        String userId,
         String title,
         Long focusTypeId,
         RepeatCycleCode repeatCycleCode,

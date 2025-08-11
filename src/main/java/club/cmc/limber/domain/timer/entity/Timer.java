@@ -23,8 +23,8 @@ public class Timer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "USER_ID", nullable = false)
-    private Long userId;
+    @Column(name = "USER_ID", nullable = false, length = 255)
+    private String userId;
 
     @Column(name = "TITLE", nullable = false, length = 255)
     private String title;

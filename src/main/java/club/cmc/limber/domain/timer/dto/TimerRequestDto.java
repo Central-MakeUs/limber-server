@@ -17,7 +17,7 @@ import java.time.LocalTime;
 public record TimerRequestDto(
         @NotNull
         @Schema(description = "사용자 UUID", example = "UUID", requiredMode = Schema.RequiredMode.REQUIRED)
-        Long userId,
+        String userId,
 
         @NotBlank
         @Size(max = 50)

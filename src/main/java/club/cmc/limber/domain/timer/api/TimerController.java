@@ -43,7 +43,7 @@ public class TimerController {
 
     @Operation(summary = "유저 타이머 목록 조회")
     @GetMapping("/user/{userId}")
-    public ResponseEntity<CustomApiResponse<List<TimerResponseDto>>> getUserTimers(@PathVariable Long userId) {
+    public ResponseEntity<CustomApiResponse<List<TimerResponseDto>>> getUserTimers(@PathVariable String userId) {
         return ResponseEntity.ok(CustomApiResponse.success((timerService.getTimersByUserId(userId))));
     }
 

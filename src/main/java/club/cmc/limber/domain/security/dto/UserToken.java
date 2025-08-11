@@ -20,7 +20,7 @@ public class UserToken {
     private Long id;
 
     @Column(name = "USER_ID", nullable = false, length = 255)
-    private Long userId;
+    private String userId;
 
     @Column(name = "REFRESH_TOKEN", nullable = false, columnDefinition = "TEXT")
     private String refreshToken;

@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface TimerRepository extends JpaRepository<Timer, Long> {
 
-    List<Timer> findByUserIdAndDelFlag(Long userId, String delFlag);
+    List<Timer> findByUserIdAndDelFlag(String userId, String delFlag);
 
-    List<Timer> findByUserIdAndStatusAndDelFlag(Long userId, String status, String delFlag);
+    List<Timer> findByUserIdAndStatusAndDelFlag(String userId, String status, String delFlag);
 
-    long countByUserIdAndDelFlagAndTimerCode(Long userId, String delFlag, TimerCode timerCode);
+    long countByUserIdAndDelFlagAndTimerCode(String userId, String delFlag, TimerCode timerCode);
 }

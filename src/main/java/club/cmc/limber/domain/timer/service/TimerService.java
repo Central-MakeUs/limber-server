@@ -10,10 +10,10 @@ import java.util.List;
 
 public interface TimerService {
     TimerResponseDto createTimer(TimerRequestDto dto);
-    List<TimerResponseDto> getTimersByUserId(Long userId);
+    List<TimerResponseDto> getTimersByUserId(String userId);
     TimerResponseDto updateTimerStatus(Long timerId, TimerStatusUpdateDto dto);
     TimerStatus getTimerStatus(Long timerId);
     TimerResponseDto getTimerById(Long timerId);
     void deleteTimer(Long timerId);
-    boolean hasOverlappingRunningTimer(Long userId, LocalTime start, LocalTime end);
+    boolean hasOverlappingRunningTimer(String userId, LocalTime start, LocalTime end);
 }

@@ -20,8 +20,8 @@ public class FocusType {
 
     private String title;
 
-    @Column(name = "USER_ID", nullable = false)
-    private Long userId;
+    @Column(name = "USER_ID", nullable = false, length = 255)
+    private String userId;
 
     @Column(name = "DEFAULT_FLAG", nullable = false, length = 1)
     private String defaultFlag = "N";

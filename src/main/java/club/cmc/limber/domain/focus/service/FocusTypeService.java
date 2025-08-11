@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface FocusTypeService {
     FocusTypeResponseDto createFocusType(FocusTypeRequestDto dto);
-    List<FocusTypeResponseDto> getFocusTypesByUserId(Long userId);
-    List<FocusType> getFilteredFocusTypes(Long userId);
+    List<FocusTypeResponseDto> getFocusTypesByUserId(String userId);
+    List<FocusType> getFilteredFocusTypes(String userId);
 }

@@ -62,7 +62,7 @@ public class TimerHistoryServiceImpl implements TimerHistoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TimerHistoryResponseDto> getHistoriesByUserId(Long userId) {
+    public List<TimerHistoryResponseDto> getHistoriesByUserId(String userId) {
         return timerHistoryRepository.findAll()
                 .stream()
                 .filter(h -> h.getUserId().equals(userId) && "N".equals(h.getDelFlag()))

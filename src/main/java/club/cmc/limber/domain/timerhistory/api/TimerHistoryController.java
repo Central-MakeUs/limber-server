@@ -7,8 +7,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class TimerHistoryController {
     @Operation(summary = "사용자별 타이머 이력 조회")
     @GetMapping("/me")
     public ResponseEntity<List<TimerHistoryResponseDto>> getHistoriesByUserId(
-            @AuthenticationPrincipal Long userId
+            @RequestParam(required = false, value = "userId") String userId
     ) {
         return ResponseEntity.ok(timerHistoryService.getHistoriesByUserId(userId));
     }

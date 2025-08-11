@@ -65,7 +65,7 @@ public class TimerServiceImpl implements TimerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TimerResponseDto> getTimersByUserId(Long userId) {
+    public List<TimerResponseDto> getTimersByUserId(String userId) {
         return timerRepository.findByUserIdAndDelFlag(userId, "N")
                 .stream()
                 .map(this::toResponseDto)
@@ -129,7 +129,7 @@ public class TimerServiceImpl implements TimerService {
     @Override
     @Transactional(readOnly = true)
     public boolean hasOverlappingRunningTimer(
-            Long userId,
+            String userId,
             LocalTime start,
             LocalTime end
     ) {

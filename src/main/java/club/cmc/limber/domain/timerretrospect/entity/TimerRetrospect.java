@@ -24,8 +24,8 @@ public class TimerRetrospect {
     @Column(name = "TIMER_ID", nullable = false)
     private Long timerId;
 
-    @Column(name = "USER_ID", nullable = false)
-    private Long userId;
+    @Column(name = "USER_ID", nullable = false, length = 255)
+    private String userId;
 
     @Column(name = "IMMERSION", nullable = false)
     private Integer immersion;

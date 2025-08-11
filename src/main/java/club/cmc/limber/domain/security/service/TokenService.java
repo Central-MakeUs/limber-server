@@ -2,6 +2,7 @@ package club.cmc.limber.domain.security.service;
 
 import club.cmc.limber.domain.security.dto.JwtTokenProvider;
 import club.cmc.limber.domain.security.dto.TokenPair;
+import club.cmc.limber.domain.security.dto.UserToken;
 import club.cmc.limber.domain.security.repository.UserTokenRepository;
 import club.cmc.limber.domain.user.entity.User;
 import club.cmc.limber.domain.user.repository.UserRepository;
@@ -20,7 +21,7 @@ public class TokenService {
         String accessToken = jwtTokenProvider.createAccessToken(user);
         String refreshToken = jwtTokenProvider.createRefreshToken(user);
 
-        userTokenRepository.save(user.getId(), refreshToken, jwtTokenProvider.getRefreshExpiration());
+//        userTokenRepository.save(user.getId(), refreshToken, jwtTokenProvider.getRefreshExpiration());
 
         return TokenPair.builder()
                 .accessToken(accessToken)
@@ -33,15 +34,17 @@ public class TokenService {
             throw new IllegalArgumentException("유효하지 않은 리프레시 토큰입니다.");
         }
 
-        Long userId = Long.parseLong(jwtTokenProvider.extractUserId(refreshToken));
+        String userId = jwtTokenProvider.extractUserId(refreshToken);
 
         // 저장된 토큰과 비교
-        String savedToken = userTokenRepository.findByUserId(userId);
-        if (savedToken == null || !savedToken.equals(refreshToken)) {
+        UserToken savedToken = userTokenRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저의 토큰 정보가 존재하지 않습니다."));
+
+        if (!savedToken.getRefreshToken().equals(refreshToken)) {
             throw new IllegalArgumentException("서버에 저장된 리프레시 토큰과 일치하지 않습니다.");
         }
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUserId(savedToken.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         String newAccessToken = jwtTokenProvider.createAccessToken(user);
