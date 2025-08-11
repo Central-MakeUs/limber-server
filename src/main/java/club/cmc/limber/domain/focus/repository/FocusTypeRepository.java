@@ -18,7 +18,7 @@ public interface FocusTypeRepository extends JpaRepository<FocusType, Long> {
 
     @Query("""
         SELECT f FROM FocusType f
-        WHERE f.delFlag = 'Y' AND f.userId = :userId
+        WHERE f.delFlag = 'N' AND f.userId = :userId
            OR f.defaultFlag = 'Y'
         ORDER BY 
             CASE WHEN f.defaultFlag = 'Y' THEN 0 ELSE 1 END,
