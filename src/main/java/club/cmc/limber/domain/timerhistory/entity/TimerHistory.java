@@ -24,8 +24,8 @@ public class TimerHistory {
     @Column(name = "TIMER_ID", nullable = false)
     private Long timerId;
 
-    @Column(name = "USER_ID", nullable = false)
-    private Long userId;
+    @Column(name = "USER_ID", nullable = false, length = 255)
+    private String userId;
 
     @Column(name = "TITLE", nullable = false)
     private String title;
@@ -55,6 +55,12 @@ public class TimerHistory {
 
     @Column(name = "END_TIME", nullable = false)
     private LocalTime endTime;
+
+    @Column(name = "ACUTAL_START_TIME", nullable = false)
+    private LocalDateTime actualStartTime;
+
+    @Column(name = "ACUTAL_END_TIME")
+    private LocalDateTime actualEndTime;
 
     @Column(name = "DEL_FLAG", nullable = false)
     private String delFlag = "N";

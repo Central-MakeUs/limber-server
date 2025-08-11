@@ -17,7 +17,7 @@ import java.time.LocalTime;
 public record TimerRequestDto(
         @NotNull
         @Schema(description = "사용자 UUID", example = "UUID", requiredMode = Schema.RequiredMode.REQUIRED)
-        Long userId,
+        String userId,
 
         @NotBlank
         @Size(max = 50)
@@ -29,13 +29,11 @@ public record TimerRequestDto(
         Long focusTypeId,
 
         @NotNull
-        @Schema(description = "타이머 타입 코드", example = "IMMEDIATE", requiredMode = Schema.RequiredMode.REQUIRED,
-                allowableValues = {"IMMEDIATE", "SCHEDULED"})
+        @Schema(description = "타이머 타입 코드", example = "IMMEDIATE", requiredMode = Schema.RequiredMode.REQUIRED)
         TimerCode timerCode,
 
         @NotNull
-        @Schema(description = "반복 주기 코드", example = "WEEKLY", requiredMode = Schema.RequiredMode.REQUIRED,
-                allowableValues = {"NONE","EVERY","WEEKDAY","WEEKEND"})
+        @Schema(description = "반복 주기 코드", example = "WEEKLY", requiredMode = Schema.RequiredMode.REQUIRED)
         RepeatCycleCode repeatCycleCode,
 
         @Schema(description = "반복 요일(0:일, 6:월)", example = "0,1,2,3,4,5,6")

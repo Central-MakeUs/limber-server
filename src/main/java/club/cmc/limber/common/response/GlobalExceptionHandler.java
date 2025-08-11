@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ApiResponse<Void>> handleBusinessException(BusinessException ex) {
+    public ResponseEntity<CustomApiResponse<Void>> handleBusinessException(BusinessException ex) {
         ErrorCode code = ex.getErrorCode();
         return ResponseEntity
                 .status(code.getStatus())
-                .body(ApiResponse.fail(code, ex.getMessage()));
+                .body(CustomApiResponse.fail(code, ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Void>> handleValidationException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<CustomApiResponse<Void>> handleValidationException(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult().getFieldErrors()
                 .stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
@@ -31,21 +31,21 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(ErrorCode.INVALID_INPUT.getStatus())
-                .body(ApiResponse.fail(ErrorCode.INVALID_INPUT, message));
+                .body(CustomApiResponse.fail(ErrorCode.INVALID_INPUT, message));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+    public ResponseEntity<CustomApiResponse<Void>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         return ResponseEntity
                 .status(ErrorCode.INVALID_INPUT.getStatus())
-                .body(ApiResponse.fail(ErrorCode.INVALID_INPUT, "잘못된 타입의 입력값입니다."));
+                .body(CustomApiResponse.fail(ErrorCode.INVALID_INPUT, "잘못된 타입의 입력값입니다."));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Void>> handleGeneralException(Exception ex) {
+    public ResponseEntity<CustomApiResponse<Void>> handleGeneralException(Exception ex) {
         ex.printStackTrace(); // 로그 찍기
         return ResponseEntity
                 .status(ErrorCode.INTERNAL_SERVER_ERROR.getStatus())
-                .body(ApiResponse.fail(ErrorCode.INTERNAL_SERVER_ERROR));
+                .body(CustomApiResponse.fail(ErrorCode.INTERNAL_SERVER_ERROR));
     }
 }

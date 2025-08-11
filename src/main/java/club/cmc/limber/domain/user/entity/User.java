@@ -19,6 +19,9 @@ public class User {
     @Column(name = "ID")
     private Long id;  // ID
 
+    @Column(name = "USER_ID", length = 255)
+    private String userId;  // ID
+
     @Column(name = "EMAIL", length = 255)
     private String email;  // 이메일
 

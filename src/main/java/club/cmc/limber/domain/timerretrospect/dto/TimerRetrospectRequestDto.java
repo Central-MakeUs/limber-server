@@ -6,12 +6,13 @@ import club.cmc.limber.domain.timerretrospect.entity.TimerRetrospect;
 import java.time.LocalDateTime;
 
 public record TimerRetrospectRequestDto(
+        String userId,
         Long timerHistoryId,
         Long timerId,
         Integer immersion,
         String comment
 ) {
-    public TimerRetrospect toEntity(Long userId) {
+    public TimerRetrospect toEntity() {
         TimerRetrospect entity = new TimerRetrospect();
         entity.setTimerHistoryId(timerHistoryId);
         entity.setTimerId(timerId);

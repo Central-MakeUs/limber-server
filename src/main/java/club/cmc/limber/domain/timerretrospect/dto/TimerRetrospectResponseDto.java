@@ -6,7 +6,7 @@ public record TimerRetrospectResponseDto(
         Long id,
         Long timerHistoryId,
         Long timerId,
-        Long userId,
+        String userId,
         Integer immersion,
         String comment,
         String delFlag

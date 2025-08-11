@@ -1,4 +1,4 @@
-package club.cmc.limber.domain.timerhistory.dto;
+package club.cmc.limber.domain.timerhistory.dto.history;
 
 import club.cmc.limber.domain.timer.enums.RepeatCycleCode;
 import club.cmc.limber.domain.timerhistory.entity.TimerHistory;
@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 public record TimerHistoryRequestDto(
         Long timerId,
-        Long userId,
+        String userId,
         String title,
         Long focusTypeId,
         RepeatCycleCode repeatCycleCode,

@@ -1,5 +1,6 @@
 package club.cmc.limber.domain.timer.api;
 
+import club.cmc.limber.common.response.CustomApiResponse;
 import club.cmc.limber.domain.timer.dto.TimerRequestDto;
 import club.cmc.limber.domain.timer.dto.TimerResponseDto;
 import club.cmc.limber.domain.timer.dto.TimerStatusUpdateDto;
@@ -9,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +27,8 @@ public class TimerController {
     }
 
     @Operation(
-            summary = "타이머 즉시 시작",
-            description = "요청 즉시 타이머를 시작합니다.",
+            summary = "타이머 예약(즉시시작, 예약)",
+            description = "타이머 지금 시작 혹은 예약합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공"),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content)
@@ -43,14 +43,14 @@ public class TimerController {
 
     @Operation(summary = "유저 타이머 목록 조회")
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<TimerResponseDto>> getUserTimers(@PathVariable Long userId) {
-        return ResponseEntity.ok(timerService.getTimersByUserId(userId));
+    public ResponseEntity<List<TimerResponseDto>> getUserTimers(@PathVariable String userId) {
+        return ResponseEntity.ok((timerService.getTimersByUserId(userId)));
     }
 
     @Operation(summary = "단일 타이머 조회")
     @GetMapping("/{timerId}")
     public ResponseEntity<TimerResponseDto> getTimerById(@PathVariable Long timerId) {
-        return ResponseEntity.ok(timerService.getTimerById(timerId));
+        return ResponseEntity.ok((timerService.getTimerById(timerId)));
     }
 
     @Operation(summary = "타이머 상태 변경")
@@ -59,13 +59,13 @@ public class TimerController {
             @PathVariable Long timerId,
             @RequestBody TimerStatusUpdateDto dto
     ) {
-        return ResponseEntity.ok(timerService.updateTimerStatus(timerId, dto));
+        return ResponseEntity.ok((timerService.updateTimerStatus(timerId, dto)));
     }
 
     @Operation(summary = "타이머 상태 조회")
     @GetMapping("/{timerId}/status")
     public ResponseEntity<TimerStatus> getTimerStatus(@PathVariable Long timerId) {
-        return ResponseEntity.ok(timerService.getTimerStatus(timerId));
+        return ResponseEntity.ok((timerService.getTimerStatus(timerId)));
     }
 
     @Operation(summary = "타이머 삭제")

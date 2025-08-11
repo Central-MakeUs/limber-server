@@ -22,8 +22,8 @@ public class TimerRetrospectServiceImpl implements TimerRetrospectService {
 
     @Override
     @Transactional
-    public TimerRetrospectResponseDto saveRetrospect(Long userId, TimerRetrospectRequestDto dto) {
-        TimerRetrospect saved = timerRetrospectRepository.save(dto.toEntity(userId));
+    public TimerRetrospectResponseDto saveRetrospect(TimerRetrospectRequestDto dto) {
+        TimerRetrospect saved = timerRetrospectRepository.save(dto.toEntity());
         return TimerRetrospectResponseDto.from(saved);
     }
 

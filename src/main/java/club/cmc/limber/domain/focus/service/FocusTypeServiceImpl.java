@@ -37,7 +37,7 @@ public class FocusTypeServiceImpl implements FocusTypeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<FocusTypeResponseDto> getFocusTypesByUserId(Long userId) {
+    public List<FocusTypeResponseDto> getFocusTypesByUserId(String userId) {
         return focusTypeRepository.findByUserIdAndDelFlag(userId, "N")
                 .stream()
                 .map(this::toResponseDto)
@@ -45,7 +45,7 @@ public class FocusTypeServiceImpl implements FocusTypeService {
     }
 
     @Override
-    public List<FocusType> getFilteredFocusTypes(Long userId) {
+    public List<FocusType> getFilteredFocusTypes(String userId) {
         return focusTypeRepository.findCustomFocusTypes(userId);
     }
 

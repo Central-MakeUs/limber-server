@@ -66,7 +66,7 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
-        Long userId = Long.valueOf(claims.getSubject());
+        String userId = claims.getSubject();
         String email = claims.get("email", String.class);        // 클레임에 포함된 경우
         String nickname = claims.get("nickname", String.class);  // 클레임에 포함된 경우
 
