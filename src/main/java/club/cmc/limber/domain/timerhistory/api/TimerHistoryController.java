@@ -1,5 +1,6 @@
 package club.cmc.limber.domain.timerhistory.api;
 
+import club.cmc.limber.common.response.CustomApiResponse;
 import club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryResponseDto;
 import club.cmc.limber.domain.timerhistory.dto.history.TimerHistorySearchRequestDto;
 import club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryWeeklyGroupDto;

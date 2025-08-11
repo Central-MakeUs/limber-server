@@ -35,37 +35,37 @@ public class TimerController {
             }
     )
     @PostMapping
-    public ResponseEntity<CustomApiResponse<?>> createTimer(
+    public ResponseEntity<TimerResponseDto> createTimer(
             @RequestBody TimerRequestDto dto
     ) {
-        return ResponseEntity.ok(CustomApiResponse.success(timerService.createTimer(dto)));
+        return ResponseEntity.ok(timerService.createTimer(dto));
     }
 
     @Operation(summary = "유저 타이머 목록 조회")
     @GetMapping("/user/{userId}")
-    public ResponseEntity<CustomApiResponse<List<TimerResponseDto>>> getUserTimers(@PathVariable String userId) {
-        return ResponseEntity.ok(CustomApiResponse.success((timerService.getTimersByUserId(userId))));
+    public ResponseEntity<List<TimerResponseDto>> getUserTimers(@PathVariable String userId) {
+        return ResponseEntity.ok((timerService.getTimersByUserId(userId)));
     }
 
     @Operation(summary = "단일 타이머 조회")
     @GetMapping("/{timerId}")
-    public ResponseEntity<CustomApiResponse<TimerResponseDto>> getTimerById(@PathVariable Long timerId) {
-        return ResponseEntity.ok(CustomApiResponse.success((timerService.getTimerById(timerId))));
+    public ResponseEntity<TimerResponseDto> getTimerById(@PathVariable Long timerId) {
+        return ResponseEntity.ok((timerService.getTimerById(timerId)));
     }
 
     @Operation(summary = "타이머 상태 변경")
     @PatchMapping("/{timerId}/status")
-    public ResponseEntity<CustomApiResponse<TimerResponseDto>> updateTimerStatus(
+    public ResponseEntity<TimerResponseDto> updateTimerStatus(
             @PathVariable Long timerId,
             @RequestBody TimerStatusUpdateDto dto
     ) {
-        return ResponseEntity.ok(CustomApiResponse.success((timerService.updateTimerStatus(timerId, dto))));
+        return ResponseEntity.ok((timerService.updateTimerStatus(timerId, dto)));
     }
 
     @Operation(summary = "타이머 상태 조회")
     @GetMapping("/{timerId}/status")
-    public ResponseEntity<CustomApiResponse<TimerStatus>> getTimerStatus(@PathVariable Long timerId) {
-        return ResponseEntity.ok(CustomApiResponse.success((timerService.getTimerStatus(timerId))));
+    public ResponseEntity<TimerStatus> getTimerStatus(@PathVariable Long timerId) {
+        return ResponseEntity.ok((timerService.getTimerStatus(timerId)));
     }
 
     @Operation(summary = "타이머 삭제")
