@@ -1,11 +1,9 @@
 package club.cmc.limber.domain.timerhistory.service;
 
-import club.cmc.limber.domain.timerhistory.dto.*;
-import club.cmc.limber.domain.timerhistory.dto.analytics.FailReasonCountDto;
-import club.cmc.limber.domain.timerhistory.dto.analytics.FocusDistributionDto;
+import club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryRequestDto;
+import club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryResponseDto;
+import club.cmc.limber.domain.timerhistory.dto.history.TimerHistorySearchRequestDto;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 
@@ -13,7 +11,9 @@ public interface TimerHistoryService {
 
     TimerHistoryResponseDto saveHistory(TimerHistoryRequestDto dto);
 
+    // 기존 메서드(필요 시 유지)
     List<TimerHistoryResponseDto> getHistoriesByUserId(String userId);
 
-    // SENT: actual 구간이 기간과 겹치는 이력 목록
+    // 새 검색 메서드 (ALL: List<TimerHistoryWithRetrospectDto>, WEEKLY: List<TimerHistoryWeeklyGroupDto>)
+    Object searchWithRetrospect(TimerHistorySearchRequestDto req);
 }

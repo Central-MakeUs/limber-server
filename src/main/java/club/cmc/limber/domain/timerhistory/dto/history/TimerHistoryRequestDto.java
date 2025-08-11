@@ -1,4 +1,4 @@
-package club.cmc.limber.domain.timerhistory.dto;
+package club.cmc.limber.domain.timerhistory.dto.history;
 
 import club.cmc.limber.domain.timer.enums.RepeatCycleCode;
 import club.cmc.limber.domain.timerhistory.entity.TimerHistory;
