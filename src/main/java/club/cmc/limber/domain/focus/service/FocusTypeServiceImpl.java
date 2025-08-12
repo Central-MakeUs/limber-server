@@ -28,7 +28,6 @@ public class FocusTypeServiceImpl implements FocusTypeService {
         focusType.setDefaultFlag("N");
         focusType.setDelFlag("N");
         focusType.setSequence(dto.sequence());
-        focusType.setRegDt(LocalDateTime.now());
         focusType.setRegId("system");
 
         FocusType saved = focusTypeRepository.save(focusType);
