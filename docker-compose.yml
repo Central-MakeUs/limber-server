@@ -11,15 +11,15 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - limber-net
-    restart: unless-stopped
-    profiles: [ "db" ]
+#    restart: unless-stopped
+#    profiles: [ "db" ]
 
   app:
     build:
       context: .
       dockerfile: ./docker/Dockerfile
-#    depends_on:
-#      - postgres
+    depends_on:
+      - postgres
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/limberdb
       SPRING_DATASOURCE_USERNAME: limber
