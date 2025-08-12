@@ -142,7 +142,7 @@ public class TimerServiceImpl implements TimerService {
         List<Timer> runningTimers =
                 timerRepository.findByUserIdAndStatusAndDelFlag(
                         userId,
-                        TimerStatus.RUNNING.name(),
+                        TimerStatus.RUNNING,
                         "N"
                 );
         return runningTimers.stream().anyMatch(t ->
