@@ -38,5 +38,14 @@ public class FocusTypeController {
         List<FocusType> results = focusTypeService.getFilteredFocusTypes(userId);
         return ResponseEntity.ok(results);
     }
-}
 
+    @Operation(summary = "집중유형 삭제(소프트 딜리트)")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFocusType(
+            @PathVariable Long id,
+            @RequestParam String userId
+    ) {
+        focusTypeService.deleteFocusType(userId, id);
+        return ResponseEntity.noContent().build();
+    }
+}

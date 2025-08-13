@@ -27,7 +27,11 @@ public class FocusTypeServiceImpl implements FocusTypeService {
         focusType.setTitle(dto.title());
         focusType.setDefaultFlag("N");
         focusType.setDelFlag("N");
-        focusType.setSequence(dto.sequence());
+        focusType.setSequence(
+                getFocusTypesByUserId(dto.userId()).stream()
+                        .mapToInt(FocusTypeResponseDto::sequence) // record getter
+                        .max()
+                        .orElse(0));
         focusType.setRegDt(LocalDateTime.now());
         focusType.setRegId("system");
 
@@ -47,6 +51,25 @@ public class FocusTypeServiceImpl implements FocusTypeService {
     @Override
     public List<FocusType> getFilteredFocusTypes(String userId) {
         return focusTypeRepository.findCustomFocusTypes(userId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteFocusType(String userId, Long id) {
+        FocusType ft = focusTypeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 집중유형입니다. id=" + id));
+
+        if (!ft.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("해당 집중유형에 대한 권한이 없습니다.");
+        }
+        if ("Y".equals(ft.getDelFlag())) {
+            return; // 이미 삭제됨 (원하면 예외로 바꿔도 됨)
+        }
+
+        ft.setDelFlag("Y");
+        ft.setUpdId(userId);
+        ft.setUpdDt(LocalDateTime.now());
+        focusTypeRepository.save(ft);
     }
 
     private FocusTypeResponseDto toResponseDto(FocusType focusType) {

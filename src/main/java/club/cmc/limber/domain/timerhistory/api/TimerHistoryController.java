@@ -1,10 +1,7 @@
 package club.cmc.limber.domain.timerhistory.api;
 
 import club.cmc.limber.common.response.CustomApiResponse;
-import club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryResponseDto;
-import club.cmc.limber.domain.timerhistory.dto.history.TimerHistorySearchRequestDto;
-import club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryWeeklyGroupDto;
-import club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryWithRetrospectDto;
+import club.cmc.limber.domain.timerhistory.dto.history.*;
 import club.cmc.limber.domain.timerhistory.service.TimerHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -12,11 +9,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @Tag(name = "타이머 이력 API", description = "타이머 히스토리(알림 전송 등) 관련 API")
@@ -76,4 +73,26 @@ public class TimerHistoryController {
         return ResponseEntity.ok(timerHistoryService.searchWithRetrospect(req));
     }
 
+    @Operation(
+            summary = "타이머 이력 저장",
+            description = "타이머 실행/알림 이력 1건을 저장합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    description = "저장 요청 DTO",
+                    content = @Content(schema = @Schema(implementation = TimerHistoryRequestDto.class))
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "생성 성공",
+                            content = @Content(schema = @Schema(implementation = TimerHistoryResponseDto.class)))
+            }
+    )
+    @PostMapping
+    public ResponseEntity<TimerHistoryResponseDto> saveHistory(
+            @Valid @RequestBody TimerHistoryRequestDto dto
+    ) {
+        TimerHistoryResponseDto res = timerHistoryService.saveHistory(dto);
+        return ResponseEntity
+                .created(URI.create("/api/timer-histories/" + res.id()))
+                .body(res);
+    }
 }

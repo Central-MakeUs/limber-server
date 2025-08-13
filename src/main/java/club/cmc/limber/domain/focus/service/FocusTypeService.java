@@ -10,4 +10,6 @@ public interface FocusTypeService {
     FocusTypeResponseDto createFocusType(FocusTypeRequestDto dto);
     List<FocusTypeResponseDto> getFocusTypesByUserId(String userId);
     List<FocusType> getFilteredFocusTypes(String userId);
+
+    void deleteFocusType(String userId, Long id); // 추가
 }

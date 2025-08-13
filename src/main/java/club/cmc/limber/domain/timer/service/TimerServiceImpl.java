@@ -56,7 +56,7 @@ public class TimerServiceImpl implements TimerService {
         timer.setRepeatDays(dto.repeatDays());
         timer.setStartTime(dto.startTime());
         timer.setEndTime(dto.endTime());
-        timer.setStatus(TimerStatus.READY);
+        timer.setStatus(TimerStatus.ON);
         timer.setDelFlag("N");
         timer.setRegId(dto.userId());
 
@@ -79,7 +79,7 @@ public class TimerServiceImpl implements TimerService {
         Timer timer = timerRepository.findById(timerId)
                 .orElseThrow(() -> new IllegalArgumentException("타이머가 존재하지 않습니다."));
 
-        if (dto.status() == TimerStatus.RUNNING) {
+        if (dto.status() == TimerStatus.ON) {
             boolean overlap = hasOverlappingRunningTimer(timer.getUserId(), timer.getStartTime(), timer.getEndTime());
             if (overlap) {
                 throw new IllegalStateException("해당 시간에 이미 진행 중인 타이머가 존재합니다.");
@@ -137,7 +137,7 @@ public class TimerServiceImpl implements TimerService {
         List<Timer> runningTimers =
                 timerRepository.findByUserIdAndStatusAndDelFlag(
                         userId,
-                        TimerStatus.RUNNING.name(),
+                        TimerStatus.ON,
                         "N"
                 );
         return runningTimers.stream().anyMatch(t ->
