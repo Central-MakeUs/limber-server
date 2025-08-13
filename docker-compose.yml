@@ -11,6 +11,8 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - limber-net
+#    restart: unless-stopped
+#    profiles: [ "db" ]
 
   app:
     build:

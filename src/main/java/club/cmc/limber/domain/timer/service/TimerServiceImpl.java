@@ -47,6 +47,11 @@ public class TimerServiceImpl implements TimerService {
             }
         }
 
+        boolean overlap = hasOverlappingRunningTimer(dto.userId(), dto.startTime(), dto.endTime());
+        if (overlap) {
+            throw new IllegalStateException("해당 시간에 이미 진행 중인 타이머가 존재합니다.");
+        }
+
         Timer timer = new Timer();
         timer.setUserId(dto.userId());
         timer.setTitle(dto.title());

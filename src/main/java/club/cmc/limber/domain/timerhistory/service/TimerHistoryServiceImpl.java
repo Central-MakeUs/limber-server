@@ -37,7 +37,6 @@ public class TimerHistoryServiceImpl implements TimerHistoryService {
         history.setStartTime(dto.startTime());
         history.setEndTime(dto.endTime());
         history.setDelFlag("N");
-        history.setRegDt(LocalDateTime.now());
         history.setRegId(dto.regId());
 
         TimerHistory saved = timerHistoryRepository.save(history);
