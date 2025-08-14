@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -27,49 +28,39 @@ public class TimerMinuteBatch {
     private final TimerRepository timerRepository;
     private final TimerHistoryRepository timerHistoryRepository;
 
-    /**
-     * 매 분 0초에 실행 (초 단위까지 맞추어 분 정각에 수행)
-     * 형식: 초 분 시 * * *  → "0 * * * * *"
-     */
     @Scheduled(cron = "0 * * * * *", zone = "Asia/Seoul")
     @Transactional
     public void run() {
-        // 분 정각(초/나노 0) 기준 시간 계산
-        LocalDateTime now = LocalDateTime.now(ZONE_SEOUL)
-                .withSecond(0).withNano(0);
-        LocalTime nowHHmm = now.toLocalTime();             // HH:mm:00
+        LocalDateTime now = LocalDateTime.now(ZONE_SEOUL).withSecond(0).withNano(0);
+        LocalTime nowHHmm = now.toLocalTime();
         LocalDate today = now.toLocalDate();
 
-        // status=ON && endTime == 현재 분(HH:mm)
-        var targets = timerRepository.findByStatusAndEndTime(TimerStatus.ON, nowHHmm);
+        // endTime == 현재, status=ON
+        List<Timer> candidates = timerRepository.findByStatusAndEndTime(TimerStatus.ON, nowHHmm);
+        if (candidates.isEmpty()) return;
 
-        if (targets.isEmpty()) {
-            return;
-        }
-
-        for (Timer t : targets) {
-            // 동일 분 중복 방지 ( [now, now+59초] 구간 )
-            LocalDateTime slotStart = now;
-            LocalDateTime slotEnd = now.plusMinutes(1); // [start, end) 반구간
-
-            boolean exists = timerHistoryRepository.existsInMinuteSlot(t.getId(), slotStart, slotEnd);
-            if (exists) {
-                log.debug("skip duplicate history: timerId={}, slot={}", t.getId(), now);
+        for (Timer t : candidates) {
+            // 오늘 대상 아니면 skip
+            if (!TimerScheduleEvaluator.isEligibleToday(t.getRepeatCycleCode(), t.getRepeatDays(), today)) {
                 continue;
             }
 
-            // 실제 시작/종료 시간 계산:
-            // - 실제 시작: 오늘 날짜 + timer.startTime
-            // - 실제 종료: 지금(now) 혹은 오늘 날짜 + timer.endTime (둘 다 동일 분이므로 now 사용)
+            // 동일 분 중복 방지
+            LocalDateTime slotStart = now;
+            LocalDateTime slotEnd = now.plusMinutes(1);
+            if (timerHistoryRepository.existsInMinuteSlot(t.getId(), slotStart, slotEnd)) {
+                log.debug("duplicate history skipped: timerId={}, minSlot={}", t.getId(), now);
+                continue;
+            }
+
+            // 실제 시작/종료
             LocalDateTime actualStart = LocalDateTime.of(today, t.getStartTime());
-            LocalDateTime actualEnd = now; // 분 배치 시점
+            LocalDateTime actualEnd = now;
 
-            // repeatDays가 null일 수 있으므로 안전 처리 (History 컬럼은 not null)
-            String repeatDays = (t.getRepeatDays() == null) ? "" : t.getRepeatDays();
+            String repeatDaysSafe = (t.getRepeatDays() == null) ? "" : t.getRepeatDays();
 
-            // HistoryStatus는 정책에 맞게 선택
-            // - 정상 종료로 간주 → SUCCESS (혹은 COMPLETED 등 프로젝트 enum에 맞게 교체)
-            HistoryStatus status = HistoryStatus.SENT;
+            // 정상 완료 → SENT
+            HistoryStatus historyStatus = HistoryStatus.SENT;
 
             TimerHistory history = TimerHistory.builder()
                     .timerId(t.getId())
@@ -77,20 +68,29 @@ public class TimerMinuteBatch {
                     .title(t.getTitle())
                     .focusTypeId(t.getFocusType().getId())
                     .repeatCycleCode(t.getRepeatCycleCode())
-                    .repeatDays(repeatDays)
-                    .historyDt(now)               // 기록 생성 시각(분 정각)
-                    .historyStatus(status)
+                    .repeatDays(repeatDaysSafe)
+                    .historyDt(now)
+                    .historyStatus(historyStatus)
                     .failReason(null)
                     .startTime(t.getStartTime())
                     .endTime(t.getEndTime())
-                    .actualStartTime(actualStart)
-                    .actualEndTime(actualEnd)
+                    .actualStartTime(actualStart) // @Column(name="ACUTAL_START_TIME")
+                    .actualEndTime(actualEnd)     // @Column(name="ACUTAL_END_TIME")
                     .delFlag("N")
                     .regId("SYSTEM_MINUTE_BATCH")
                     .build();
 
             timerHistoryRepository.save(history);
-            log.info("saved history: timerId={}, userId={}, at={}", t.getId(), t.getUserId(), now);
+
+            // 일회용이면 OFF 전환
+            if (TimerScheduleEvaluator.isOneOff(t.getRepeatCycleCode(), t.getRepeatDays())) {
+                t.setStatus(TimerStatus.OFF);
+                t.setUpdId("SYSTEM_MINUTE_BATCH");
+            }
+
+            log.info("history saved: timerId={}, userId={}, status={}, oneOff={}",
+                    t.getId(), t.getUserId(), historyStatus,
+                    TimerScheduleEvaluator.isOneOff(t.getRepeatCycleCode(), t.getRepeatDays()));
         }
     }
 }
