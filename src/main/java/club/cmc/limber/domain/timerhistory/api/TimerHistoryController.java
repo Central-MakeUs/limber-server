@@ -4,6 +4,7 @@ import club.cmc.limber.common.response.CustomApiResponse;
 import club.cmc.limber.domain.timerhistory.dto.history.*;
 import club.cmc.limber.domain.timerhistory.service.TimerHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -48,12 +49,12 @@ public class TimerHistoryController {
     @Operation(
             summary = "이력 검색 (searchRange만 사용, 회고 미완료 필터 가능)",
             description = """
-                    - 기간 파라미터 없음: 전체 이력 대상
-                    - 대상: SENT 상태 & delFlag='N'
-                    - onlyIncompleteRetrospect=true면 회고 미완료만
-                    - searchRange=ALL → flat list
-                    - searchRange=WEEKLY → 주 단위(월~일) 그룹 리스트
-                    """,
+                - 기간 파라미터 없음: 전체 이력 대상
+                - 대상: SENT 상태 & delFlag='N'
+                - onlyIncompleteRetrospect=true면 회고 미완료만
+                - searchRange=ALL → flat list
+                - searchRange=WEEKLY → 주 단위(월~일) 그룹 리스트
+                """,
             responses = {
                     @ApiResponse(responseCode = "200", description = "ALL일 때 리스트 반환",
                             content = @Content(array = @ArraySchema(schema = @Schema(implementation = TimerHistoryWithRetrospectDto.class)))),
@@ -63,13 +64,21 @@ public class TimerHistoryController {
     )
     @GetMapping("/search")
     public ResponseEntity<?> search(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    required = true,
-                    description = "userId, searchRange(ALL|WEEKLY), onlyIncompleteRetrospect",
-                    content = @Content(schema = @Schema(implementation = TimerHistorySearchRequestDto.class))
-            )
-            @org.springframework.web.bind.annotation.RequestBody TimerHistorySearchRequestDto req
+            @Parameter(description = "사용자 ID", required = true)
+            @RequestParam String userId,
+
+            @Parameter(description = "검색 범위 (ALL|WEEKLY)", required = true)
+            @RequestParam SearchRange searchRange,
+
+            @Parameter(description = "회고 미완료만 필터링 여부", required = true)
+            @RequestParam(required = false, defaultValue = "false") boolean onlyIncompleteRetrospect
     ) {
+        TimerHistorySearchRequestDto req = new TimerHistorySearchRequestDto(
+                userId,
+                searchRange,
+                onlyIncompleteRetrospect
+        );
+
         return ResponseEntity.ok(timerHistoryService.searchWithRetrospect(req));
     }
 
