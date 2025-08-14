@@ -34,6 +34,7 @@ public class TimerMinuteBatch {
         LocalDateTime now = LocalDateTime.now(ZONE_SEOUL).withSecond(0).withNano(0);
         LocalTime nowHHmm = now.toLocalTime();
         LocalDate today = now.toLocalDate();
+        log.info("[TIMER] tick now={} HH:mm:ss={}", now, nowHHmm);
 
         // endTime == 현재, status=ON
         List<Timer> candidates = timerRepository.findByStatusAndEndTime(TimerStatus.ON, nowHHmm);

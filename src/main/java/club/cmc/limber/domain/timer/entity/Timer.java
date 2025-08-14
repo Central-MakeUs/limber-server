@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "TIMER")
 @Getter
 @Setter
 @NoArgsConstructor
