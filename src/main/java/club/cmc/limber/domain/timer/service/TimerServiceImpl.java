@@ -2,6 +2,7 @@ package club.cmc.limber.domain.timer.service;
 
 
 import club.cmc.limber.domain.focus.entity.FocusType;
+import club.cmc.limber.domain.focus.exception.FocusTypeNotFoundException;
 import club.cmc.limber.domain.focus.repository.FocusTypeRepository;
 import club.cmc.limber.domain.timer.dto.TimerRequestDto;
 import club.cmc.limber.domain.timer.dto.TimerResponseDto;
@@ -10,6 +11,7 @@ import club.cmc.limber.domain.timer.entity.Timer;
 import club.cmc.limber.domain.timer.enums.TimerCode;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
 import club.cmc.limber.domain.timer.exception.TimerConflictException;
+import club.cmc.limber.domain.timer.exception.TimerLimitExceededException;
 import club.cmc.limber.domain.timer.exception.TimerNotFoundException;
 import club.cmc.limber.domain.timer.repository.TimerRepository;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ public class TimerServiceImpl implements TimerService {
     @Transactional
     public TimerResponseDto createTimer(TimerRequestDto dto) {
         FocusType focusType = focusTypeRepository.findById(dto.focusTypeId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 집중 유형 타입입니다."));
+                .orElseThrow(FocusTypeNotFoundException::new);
 
         // IMMEDIATE 타입만 조회하여 개수 제한
         if (TimerCode.IMMEDIATE.equals(dto.timerCode())) {
@@ -45,13 +47,13 @@ public class TimerServiceImpl implements TimerService {
             );
 
             if (immediateCount >= 10) {
-                throw new IllegalStateException("지금 시작은 최대 10개까지만 등록할 수 있습니다.");
+                throw new TimerLimitExceededException();
             }
         }
 
         boolean overlap = hasOverlappingRunningTimer(dto.userId(), dto.startTime(), dto.endTime());
         if (overlap) {
-            throw new IllegalStateException("해당 시간에 이미 진행 중인 타이머가 존재합니다.");
+            throw new TimerConflictException();
         }
 
         Timer timer = new Timer();
@@ -83,8 +85,7 @@ public class TimerServiceImpl implements TimerService {
     @Override
     @Transactional
     public TimerResponseDto updateTimerStatus(Long timerId, TimerStatusUpdateDto dto) {
-        Timer timer = timerRepository.findById(timerId)
-                .orElseThrow(TimerNotFoundException::new);
+        Timer timer = getTimerOrThrow(timerId);
 
         if (dto.status() == TimerStatus.ON) {
             boolean overlap = hasOverlappingRunningTimer(
@@ -117,24 +118,19 @@ public class TimerServiceImpl implements TimerService {
     @Override
     @Transactional(readOnly = true)
     public TimerStatus getTimerStatus(Long timerId) {
-        Timer timer = timerRepository.findById(timerId)
-                .orElseThrow(() -> new IllegalArgumentException("타이머가 존재하지 않습니다."));
-        return timer.getStatus();
+        return getTimerOrThrow(timerId).getStatus();
     }
 
     @Override
     @Transactional(readOnly = true)
     public TimerResponseDto getTimerById(Long timerId) {
-        Timer timer = timerRepository.findById(timerId)
-                .orElseThrow(() -> new IllegalArgumentException("타이머가 존재하지 않습니다."));
-        return toResponseDto(timer);
+        return toResponseDto(getTimerOrThrow(timerId));
     }
 
     @Override
     @Transactional
     public void deleteTimer(Long timerId) {
-        Timer timer = timerRepository.findById(timerId)
-                .orElseThrow(() -> new IllegalArgumentException("타이머가 존재하지 않습니다."));
+        Timer timer = getTimerOrThrow(timerId);
         timer.setDelFlag("Y");
     }
 
@@ -154,5 +150,13 @@ public class TimerServiceImpl implements TimerService {
         return runningTimers.stream().anyMatch(t ->
                 (start.isBefore(t.getEndTime()) && end.isAfter(t.getStartTime()))
         );
+    }
+
+
+    // 공통: ID로 조회, 없으면 TimerNotFoundException
+    @Transactional(readOnly = true)
+    protected Timer getTimerOrThrow(Long timerId) {
+        return timerRepository.findById(timerId)
+                .orElseThrow(TimerNotFoundException::new);
     }
 }

@@ -4,6 +4,7 @@ package club.cmc.limber.domain.focus.service;
 import club.cmc.limber.domain.focus.dto.FocusTypeRequestDto;
 import club.cmc.limber.domain.focus.dto.FocusTypeResponseDto;
 import club.cmc.limber.domain.focus.entity.FocusType;
+import club.cmc.limber.domain.focus.exception.FocusTypeNotFoundException;
 import club.cmc.limber.domain.focus.repository.FocusTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class FocusTypeServiceImpl implements FocusTypeService {
     @Transactional
     public void deleteFocusType(String userId, Long id) {
         FocusType ft = focusTypeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 집중유형입니다. id=" + id));
+                .orElseThrow(FocusTypeNotFoundException::new);
 
         if (!ft.getUserId().equals(userId)) {
             throw new IllegalArgumentException("해당 집중유형에 대한 권한이 없습니다.");
