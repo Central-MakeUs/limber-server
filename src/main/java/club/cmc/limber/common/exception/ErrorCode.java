@@ -11,7 +11,12 @@ public enum ErrorCode {
 
     // 사용자 정의 오류 예시
     USER_NOT_FOUND("사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
-    DUPLICATE_EMAIL("중복된 이메일입니다.", HttpStatus.CONFLICT);
+    DUPLICATE_EMAIL("중복된 이메일입니다.", HttpStatus.CONFLICT),
+
+    //
+    NOT_FOUND_TIMER("타이머가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    TIMER_CONFLICT("해당 시간에 이미 진행 중인 타이머가 존재합니다.", HttpStatus.CONFLICT);
+
 
     private final String message;
     private final HttpStatus status;

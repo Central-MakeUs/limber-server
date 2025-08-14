@@ -9,6 +9,8 @@ import club.cmc.limber.domain.timer.dto.TimerStatusUpdateDto;
 import club.cmc.limber.domain.timer.entity.Timer;
 import club.cmc.limber.domain.timer.enums.TimerCode;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
+import club.cmc.limber.domain.timer.exception.TimerConflictException;
+import club.cmc.limber.domain.timer.exception.TimerNotFoundException;
 import club.cmc.limber.domain.timer.repository.TimerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,12 +84,16 @@ public class TimerServiceImpl implements TimerService {
     @Transactional
     public TimerResponseDto updateTimerStatus(Long timerId, TimerStatusUpdateDto dto) {
         Timer timer = timerRepository.findById(timerId)
-                .orElseThrow(() -> new IllegalArgumentException("타이머가 존재하지 않습니다."));
+                .orElseThrow(TimerNotFoundException::new);
 
         if (dto.status() == TimerStatus.ON) {
-            boolean overlap = hasOverlappingRunningTimer(timer.getUserId(), timer.getStartTime(), timer.getEndTime());
+            boolean overlap = hasOverlappingRunningTimer(
+                    timer.getUserId(),
+                    timer.getStartTime(),
+                    timer.getEndTime()
+            );
             if (overlap) {
-                throw new IllegalStateException("해당 시간에 이미 진행 중인 타이머가 존재합니다.");
+                throw new TimerConflictException();
             }
         }
 

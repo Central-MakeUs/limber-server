@@ -48,4 +48,5 @@ public class GlobalExceptionHandler {
                 .status(ErrorCode.INTERNAL_SERVER_ERROR.getStatus())
                 .body(CustomApiResponse.fail(ErrorCode.INTERNAL_SERVER_ERROR));
     }
+
 }
