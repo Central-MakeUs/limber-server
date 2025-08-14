@@ -15,5 +15,5 @@ public interface TimerService {
     TimerStatus getTimerStatus(Long timerId);
     TimerResponseDto getTimerById(Long timerId);
     void deleteTimer(Long timerId);
-    boolean hasOverlappingRunningTimer(String userId, LocalTime start, LocalTime end);
+    boolean hasOverlappingRunningTimer(String userId, LocalTime start, LocalTime end, Long originalTimerId);
 }

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +52,7 @@ public class TimerServiceImpl implements TimerService {
             }
         }
 
-        boolean overlap = hasOverlappingRunningTimer(dto.userId(), dto.startTime(), dto.endTime());
+        boolean overlap = hasOverlappingRunningTimer(dto.userId(), dto.startTime(), dto.endTime(), 0L);
         if (overlap) {
             throw new TimerConflictException();
         }
@@ -91,7 +92,8 @@ public class TimerServiceImpl implements TimerService {
             boolean overlap = hasOverlappingRunningTimer(
                     timer.getUserId(),
                     timer.getStartTime(),
-                    timer.getEndTime()
+                    timer.getEndTime(),
+                    timerId
             );
             if (overlap) {
                 throw new TimerConflictException();
@@ -139,7 +141,8 @@ public class TimerServiceImpl implements TimerService {
     public boolean hasOverlappingRunningTimer(
             String userId,
             LocalTime start,
-            LocalTime end
+            LocalTime end,
+            Long originalTimerId
     ) {
         List<Timer> runningTimers =
                 timerRepository.findByUserIdAndStatusAndDelFlag(
@@ -147,8 +150,11 @@ public class TimerServiceImpl implements TimerService {
                         TimerStatus.ON,
                         "N"
                 );
-        return runningTimers.stream().anyMatch(t ->
-                (start.isBefore(t.getEndTime()) && end.isAfter(t.getStartTime()))
+
+        return runningTimers.stream()
+                .filter(timer -> !Objects.equals(timer.getId(), originalTimerId))
+                .anyMatch(t ->
+                        (start.isBefore(t.getEndTime()) && end.isAfter(t.getStartTime()))
         );
     }
 

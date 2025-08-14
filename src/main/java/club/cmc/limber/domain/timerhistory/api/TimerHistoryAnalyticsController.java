@@ -93,7 +93,9 @@ public class TimerHistoryAnalyticsController {
                     content = @Content(schema = @Schema(implementation = TotalImmersionDto.class)))
     )
     @PostMapping("/total-immersion")
-    public ResponseEntity<TotalImmersionDto> totalImmersion(@RequestBody RangeRequest req) {
+    public ResponseEntity<TotalImmersionDto> totalImmersion(
+            @RequestBody RangeRequest req
+    ) {
         return ResponseEntity.ok(service.getTotalImmersion(req.userId(), req.startDate(), req.endDate()));
     }
 
@@ -108,7 +110,9 @@ public class TimerHistoryAnalyticsController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = FocusDistributionDto.class))))
     )
     @PostMapping("/focus-distribution")
-    public ResponseEntity<List<FocusDistributionDto>> focusDistribution(@RequestBody RangeRequest req) {
+    public ResponseEntity<List<FocusDistributionDto>> focusDistribution(
+            @RequestBody RangeRequest req
+    ) {
         return ResponseEntity.ok(service.getFocusDistribution(req.userId(), req.startDate(), req.endDate()));
     }
 
@@ -123,7 +127,9 @@ public class TimerHistoryAnalyticsController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = FailReasonCountDto.class))))
     )
     @PostMapping("/fail-reasons")
-    public ResponseEntity<List<FailReasonCountDto>> failReasons(@RequestBody RangeRequest req) {
+    public ResponseEntity<List<FailReasonCountDto>> failReasons(
+            @RequestBody RangeRequest req
+    ) {
         return ResponseEntity.ok(service.getFailReasonCounts(req.userId(), req.startDate(), req.endDate()));
     }
 }
