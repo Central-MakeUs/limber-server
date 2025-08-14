@@ -7,6 +7,7 @@ import club.cmc.limber.domain.timer.enums.TimerStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface TimerRepository extends JpaRepository<Timer, Long> {
@@ -16,4 +17,6 @@ public interface TimerRepository extends JpaRepository<Timer, Long> {
     List<Timer> findByUserIdAndStatusAndDelFlag(String userId, TimerStatus status, String delFlag);
 
     long countByUserIdAndDelFlagAndTimerCode(String userId, String delFlag, TimerCode timerCode);
+
+    List<Timer> findByStatusAndEndTime(TimerStatus status, LocalTime endTime);
 }

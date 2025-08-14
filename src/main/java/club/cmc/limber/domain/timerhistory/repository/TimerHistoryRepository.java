@@ -74,5 +74,16 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
             @Param("onlyIncomplete") boolean onlyIncomplete
     );
 
+    // 동일 타이머/동일 분(±59초) 기록 중복 방지
+    @Query("""
+        select case when count(h) > 0 then true else false end
+        from TimerHistory h
+        where h.timerId = :timerId
+          and h.historyDt >= :slotStart
+          and h.historyDt < :slotEnd
+          and h.delFlag = 'N'
+    """)
+    boolean existsInMinuteSlot(Long timerId, LocalDateTime slotStart, LocalDateTime slotEnd);
+
 }
 
