@@ -4,6 +4,7 @@ package club.cmc.limber.domain.timer.service;
 import club.cmc.limber.domain.focus.entity.FocusType;
 import club.cmc.limber.domain.focus.exception.FocusTypeNotFoundException;
 import club.cmc.limber.domain.focus.repository.FocusTypeRepository;
+import club.cmc.limber.domain.timer.dto.TimerDeleteDto;
 import club.cmc.limber.domain.timer.dto.TimerRequestDto;
 import club.cmc.limber.domain.timer.dto.TimerResponseDto;
 import club.cmc.limber.domain.timer.dto.TimerStatusUpdateDto;
@@ -132,8 +133,19 @@ public class TimerServiceImpl implements TimerService {
     @Override
     @Transactional
     public void deleteTimer(Long timerId) {
+        deactivateTimer(timerId);
+    }
+
+    private void deactivateTimer(Long timerId) {
         Timer timer = getTimerOrThrow(timerId);
         timer.setDelFlag("Y");
+        timer.setStatus(TimerStatus.OFF);
+    }
+
+    @Override
+    public void deleteTimer(TimerDeleteDto timerDeleteDto) {
+        timerDeleteDto.timerIds().stream()
+                .forEach(timerId -> deactivateTimer(timerId));
     }
 
     @Override

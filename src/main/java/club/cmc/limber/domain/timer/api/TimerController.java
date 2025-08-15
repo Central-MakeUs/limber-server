@@ -1,6 +1,7 @@
 package club.cmc.limber.domain.timer.api;
 
 import club.cmc.limber.common.response.CustomApiResponse;
+import club.cmc.limber.domain.timer.dto.TimerDeleteDto;
 import club.cmc.limber.domain.timer.dto.TimerRequestDto;
 import club.cmc.limber.domain.timer.dto.TimerResponseDto;
 import club.cmc.limber.domain.timer.dto.TimerStatusUpdateDto;
@@ -72,6 +73,15 @@ public class TimerController {
     @DeleteMapping("/{timerId}")
     public ResponseEntity<Void> deleteTimer(@PathVariable Long timerId) {
         timerService.deleteTimer(timerId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "타이머 삭제")
+    @DeleteMapping()
+    public ResponseEntity<Void> deleteTimer(
+            @RequestBody TimerDeleteDto dto
+    ) {
+        timerService.deleteTimer(dto);
         return ResponseEntity.noContent().build();
     }
 }

@@ -39,7 +39,7 @@ public class FocusTypeController {
         return ResponseEntity.ok(results);
     }
 
-    @Operation(summary = "집중유형 삭제(소프트 딜리트)")
+    @Operation(summary = "집중유형 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFocusType(
             @PathVariable Long id,

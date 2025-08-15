@@ -1,5 +1,6 @@
 package club.cmc.limber.domain.timer.service;
 
+import club.cmc.limber.domain.timer.dto.TimerDeleteDto;
 import club.cmc.limber.domain.timer.dto.TimerRequestDto;
 import club.cmc.limber.domain.timer.dto.TimerResponseDto;
 import club.cmc.limber.domain.timer.dto.TimerStatusUpdateDto;
@@ -15,5 +16,6 @@ public interface TimerService {
     TimerStatus getTimerStatus(Long timerId);
     TimerResponseDto getTimerById(Long timerId);
     void deleteTimer(Long timerId);
+    void deleteTimer(TimerDeleteDto timerDeleteDto);
     boolean hasOverlappingRunningTimer(String userId, LocalTime start, LocalTime end, Long originalTimerId);
 }
