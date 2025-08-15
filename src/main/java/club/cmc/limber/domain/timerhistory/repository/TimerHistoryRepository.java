@@ -71,7 +71,7 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
       tr.immersion,
       tr.comment,
       f.title,
-      null
+      ''
     )
     from club.cmc.limber.domain.timerhistory.entity.TimerHistory h
       left join club.cmc.limber.domain.timerretrospect.entity.TimerRetrospect tr
@@ -127,7 +127,7 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
       tr.immersion,
       tr.comment,
       f.title,
-      null
+      ''
     )
     from club.cmc.limber.domain.timerhistory.entity.TimerHistory h
       left join club.cmc.limber.domain.timerretrospect.entity.TimerRetrospect tr
