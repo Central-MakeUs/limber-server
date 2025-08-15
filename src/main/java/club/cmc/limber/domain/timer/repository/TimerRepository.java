@@ -8,8 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface TimerRepository extends JpaRepository<Timer, Long> {
+
+    Optional<Timer> findByIdAndDelFlag(Long id, String delFlag);
 
     List<Timer> findByUserIdAndDelFlagAndTimerCode(String userId, String delFlag, TimerCode timerCode);
 

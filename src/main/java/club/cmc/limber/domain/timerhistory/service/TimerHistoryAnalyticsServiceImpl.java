@@ -3,7 +3,9 @@ package club.cmc.limber.domain.timerhistory.service;
 
 import club.cmc.limber.domain.timer.enums.RepeatCycleCode;
 import club.cmc.limber.domain.timerhistory.dto.analytics.*;
+import club.cmc.limber.domain.timerhistory.dto.history.FocusTimeSlice;
 import club.cmc.limber.domain.timerhistory.entity.TimerHistory;
+import club.cmc.limber.domain.timerhistory.enums.FailReason;
 import club.cmc.limber.domain.timerhistory.enums.HistoryStatus;
 import club.cmc.limber.domain.timerhistory.repository.TimerHistoryRepository;
 import org.springframework.stereotype.Service;
@@ -114,25 +116,43 @@ public class TimerHistoryAnalyticsServiceImpl implements TimerHistoryAnalyticsSe
         return new TotalImmersionDto(totalAct, totalSched, round2(ratio));
     }
 
-    // ========== (5) RepeatCycleCode별 actual 합 ==========
+    // ========== (5) FocusType별 actual 합 ==========
     @Override
     @Transactional(readOnly = true)
     public List<FocusDistributionDto> getFocusDistribution(String userId, LocalDate startDate, LocalDate endDate) {
         var range = toRange(startDate, endDate);
-        List<TimerHistory> rows = repo.findByUserIdAndStatusAndActualStartBetween(
-                userId, HistoryStatus.SENT, range.start(), range.end());
 
-        Map<RepeatCycleCode, Integer> acc = new EnumMap<>(RepeatCycleCode.class);
-        for (TimerHistory h : rows) {
-            int a = minutesBetween(h.getActualStartTime(), h.getActualEndTime());
-            if (a <= 0) continue;
-            acc.merge(h.getRepeatCycleCode(), a, Integer::sum);
+        // 1) 쿼리에서 focusTypeName까지 받아오기
+        List<FocusTimeSlice> rows = repo.findFocusSlices(userId, range.start(), range.end());
+
+        // 2) focusTypeId별 분 합계 누적 (이름은 최초 값 유지)
+        record Acc(String name, int total) {}
+        Map<Long, Acc> acc = new HashMap<>();
+
+        for (FocusTimeSlice r : rows) {
+            int minutes = minutesBetween(r.getActualStartTime(), r.getActualEndTime());
+            if (minutes <= 0 || r.getFocusTypeId() == null) continue;
+
+            acc.compute(r.getFocusTypeId(), (id, prev) -> {
+                if (prev == null) return new Acc(r.getFocusTypeTitle(), minutes);
+                return new Acc(prev.name(), prev.total() + minutes);
+            });
         }
 
+        // 3) DTO 변환 + 정렬 (원하는 기준으로 변경 가능)
         return acc.entrySet().stream()
-                .map(e -> new FocusDistributionDto(e.getKey(), e.getValue()))
-                .sorted(Comparator.comparing(FocusDistributionDto::repeatCycleCode))
+                .map(e -> new FocusDistributionDto(e.getKey(), e.getValue().name(), e.getValue().total()))
+                .sorted(Comparator.comparing(FocusDistributionDto::focusTypeName)) // 이름 기준 정렬
                 .toList();
+    }
+
+    /** 자정 넘어가는 케이스까지 고려한 분 단위 차이 */
+    private int minutesBetween(LocalTime start, LocalTime end) {
+        if (start == null || end == null) return 0;
+        if (end.isBefore(start)) { // 자정 경과
+            return (int) Duration.between(start, end.plusHours(24)).toMinutes();
+        }
+        return (int) Duration.between(start, end).toMinutes();
     }
 
     // ========== (6) 실패 사유 (FAILED + historyDt 기간 포함) ==========
@@ -146,9 +166,9 @@ public class TimerHistoryAnalyticsServiceImpl implements TimerHistoryAnalyticsSe
         List<TimerHistory> failed = repo.findByUserIdAndStatusAndHistoryDtBetween(
                 userId, HistoryStatus.FAILED, startDt, endDt);
 
-        Map<String, Long> counts = failed.stream()
+        Map<FailReason, Long> counts = failed.stream()
                 .collect(Collectors.groupingBy(
-                        h -> Optional.ofNullable(h.getFailReason()).orElse("UNKNOWN"),
+                        h -> Optional.ofNullable(h.getFailReason()).orElse(FailReason.NONE),
                         Collectors.counting()
                 ));
 
@@ -166,11 +186,6 @@ public class TimerHistoryAnalyticsServiceImpl implements TimerHistoryAnalyticsSe
     }
 
     private static int minutesBetween(LocalDateTime s, LocalDateTime e) {
-        if (s == null || e == null) return 0;
-        return (int) Duration.between(s, e).toMinutes();
-    }
-
-    private static int minutesBetween(LocalTime s, LocalTime e) {
         if (s == null || e == null) return 0;
         return (int) Duration.between(s, e).toMinutes();
     }

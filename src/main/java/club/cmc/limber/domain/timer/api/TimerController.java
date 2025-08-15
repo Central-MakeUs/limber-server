@@ -2,6 +2,7 @@ package club.cmc.limber.domain.timer.api;
 
 import club.cmc.limber.domain.timer.dto.*;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
+import club.cmc.limber.domain.timer.facade.TimerFacade;
 import club.cmc.limber.domain.timer.service.TimerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,9 +19,11 @@ import java.util.List;
 public class TimerController {
 
     private final TimerService timerService;
+    private final TimerFacade timerFacade;
 
-    public TimerController(TimerService timerService) {
+    public TimerController(TimerService timerService, TimerFacade timerFacade) {
         this.timerService = timerService;
+        this.timerFacade = timerFacade;
     }
 
     @Operation(
@@ -72,6 +75,15 @@ public class TimerController {
     @GetMapping("/{timerId}/status")
     public ResponseEntity<TimerStatus> getTimerStatus(@PathVariable Long timerId) {
         return ResponseEntity.ok((timerService.getTimerStatus(timerId)));
+    }
+
+    @Operation(summary = "타이머 잠금해제")
+    @PostMapping("/unlock")
+    public ResponseEntity<TimerUnlockResponseDto> unlockTimer(
+            @RequestBody TimerUnlockRequestDto timerUnlockRequestDto
+
+    ) {
+        return ResponseEntity.ok(timerFacade.unlockTimer(timerUnlockRequestDto));
     }
 
     @Operation(summary = "타이머 삭제")

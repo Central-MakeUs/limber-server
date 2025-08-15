@@ -1,6 +1,7 @@
 package club.cmc.limber.domain.timerhistory.entity;
 
 import club.cmc.limber.domain.timer.enums.RepeatCycleCode;
+import club.cmc.limber.domain.timerhistory.enums.FailReason;
 import club.cmc.limber.domain.timerhistory.enums.HistoryStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -54,14 +55,15 @@ public class TimerHistory {
     @Column(name = "HISTORY_STATUS", nullable = false)
     private HistoryStatus historyStatus;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "FAIL_REASON")
-    private String failReason;
+    private FailReason failReason;
 
     @Column(name = "START_TIME", nullable = false)
-    private LocalTime startTime;
+    private LocalDateTime startTime;
 
     @Column(name = "END_TIME", nullable = false)
-    private LocalTime endTime;
+    private LocalDateTime endTime;
 
     @Column(name = "ACUTAL_START_TIME", nullable = false)
     private LocalDateTime actualStartTime;

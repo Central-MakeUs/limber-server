@@ -19,7 +19,7 @@ public interface TimerHistoryAnalyticsService {
     /** (4) 전체 몰입도: (actual 합 / scheduled 합) (SENT + actualStartTime 기간 포함) */
     TotalImmersionDto getTotalImmersion(String userId, LocalDate startDate, LocalDate endDate);
 
-    /** (5) 몰입 유형(RepeatCycleCode)별 실제 시간 합: actual 합 (SENT + actualStartTime 기간 포함) */
+    /** (5) 몰입 유형(FocusType)별 실제 시간 합: actual 합 (SENT + actualStartTime 기간 포함) */
     List<FocusDistributionDto> getFocusDistribution(String userId, LocalDate startDate, LocalDate endDate);
 
     /** (6) 실패 사유 카운트: FAILED + historyDt 기간 포함 */

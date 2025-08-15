@@ -1,5 +1,6 @@
 package club.cmc.limber.domain.timerhistory.repository;
 
+import club.cmc.limber.domain.timerhistory.dto.history.FocusTimeSlice;
 import club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryWithRetrospectDto;
 import club.cmc.limber.domain.timerhistory.entity.TimerHistory;
 import club.cmc.limber.domain.timerhistory.enums.HistoryStatus;
@@ -136,5 +137,25 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
     where h.id = :historyId
     """)
     TimerHistoryWithRetrospectDto searchWithRetrospectByHistoryId(Long historyId);
+
+    @Query("""
+    select 
+      h.focusTypeId        as focusTypeId,
+      f.title              as focusTypeTitle,
+      h.actualStartTime    as actualStartTime,
+      h.actualEndTime      as actualEndTime
+    from club.cmc.limber.domain.timerhistory.entity.TimerHistory h
+      left join club.cmc.limber.domain.focus.entity.FocusType f
+        on f.id = h.focusTypeId
+    where h.userId = :userId
+      and h.delFlag = 'N'
+      and h.historyStatus = club.cmc.limber.domain.timerhistory.enums.HistoryStatus.SENT
+      and h.actualStart between :start and :end
+    """)
+    List<FocusTimeSlice> findFocusSlices(
+            @Param("userId") String userId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 }
 

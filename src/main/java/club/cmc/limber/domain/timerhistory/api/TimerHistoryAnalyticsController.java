@@ -102,10 +102,6 @@ public class TimerHistoryAnalyticsController {
     // (5) RepeatCycleCode별 실제 시간 합
     @Operation(
             summary = "몰입 유형(RepeatCycleCode)별 실제 시간 합",
-            description = """
-                    - 기준: SENT + actualStartTime이 기간에 포함되는 데이터.
-                    - 응답: RepeatCycleCode, totalActualMinutes(분).
-                    """,
             responses = @ApiResponse(responseCode = "200",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = FocusDistributionDto.class))))
     )
