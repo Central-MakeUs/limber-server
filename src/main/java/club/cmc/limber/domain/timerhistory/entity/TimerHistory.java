@@ -1,5 +1,6 @@
 package club.cmc.limber.domain.timerhistory.entity;
 
+import club.cmc.limber.domain.focus.entity.FocusType;
 import club.cmc.limber.domain.timer.enums.RepeatCycleCode;
 import club.cmc.limber.domain.timerhistory.enums.HistoryStatus;
 import jakarta.persistence.*;

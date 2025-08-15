@@ -78,6 +78,7 @@ public class TimerHistoryServiceImpl implements TimerHistoryService {
                 req.userId(), onlyIncomplete
         );
 
+        //
         // Range 결정: ALL → 평평한 리스트, WEEKLY → 주별 그룹
         if (req.searchRange() == SearchRange.WEEKLY) {
             // 주 시작(월요일) 기준으로 묶기
