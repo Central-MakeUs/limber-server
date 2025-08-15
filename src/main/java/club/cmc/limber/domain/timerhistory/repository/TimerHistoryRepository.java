@@ -52,24 +52,24 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
 
     @Query("""
     select new club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryWithRetrospectDto(
-      h.id,                               -- Long id
-      h.timerId,                          -- Long timerId
-      h.userId,                           -- String userId
-      h.title,                            -- String title
-      h.focusTypeId,                      -- Long focusTypeId
-      h.repeatCycleCode,                  -- RepeatCycleCode repeatCycleCode
-      h.repeatDays,                       -- String repeatDays
-      h.historyDt,                        -- LocalDateTime historyDt
-      h.historyStatus,                    -- HistoryStatus historyStatus
-      h.failReason,                       -- String failReason
-      h.startTime,                        -- LocalTime startTime
-      h.endTime,                          -- LocalTime endTime
-      case when tr.id is not null then true else false end, -- boolean hasRetrospect
-      tr.id,                              -- Long retrospectId
-      tr.immersion,                       -- Integer retrospectImmersion
-      tr.comment,                         -- String retrospectComment
-      f.title,                            -- String focusTypeTitle
-      null                                -- compact constructor에서 무시하고 직접 계산
+      h.id,
+      h.timerId,
+      h.userId,
+      h.title,
+      h.focusTypeId,
+      h.repeatCycleCode,
+      h.repeatDays,
+      h.historyDt,
+      h.historyStatus,
+      h.failReason,
+      h.startTime,
+      h.endTime,
+      case when tr.id is not null then true else false end,
+      tr.id,
+      tr.immersion,
+      tr.comment,
+      f.title,
+      null
     )
     from club.cmc.limber.domain.timerhistory.entity.TimerHistory h
       left join club.cmc.limber.domain.timerretrospect.entity.TimerRetrospect tr
