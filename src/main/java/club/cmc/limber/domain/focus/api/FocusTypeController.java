@@ -34,7 +34,7 @@ public class FocusTypeController {
 
     @Operation(summary = "유저의 집중유형 목록 조회")
     @GetMapping("/{userId}")
-    public ResponseEntity<List<FocusType>> getFocusTypes(@PathVariable String userId) {
+    public ResponseEntity<List<FocusType>> getFocusTypes(@PathVariable("userId") String userId) {
         List<FocusType> results = focusTypeService.getFilteredFocusTypes(userId);
         return ResponseEntity.ok(results);
     }

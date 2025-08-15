@@ -14,7 +14,7 @@ spring:
     defer-datasource-initialization: true
   sql:
     init:
-      mode: never
+      mode: always
 #      data-locations: classpath:data.sql   # ← 명시적으로 지정
 ################################################################################
 # WebClient config
