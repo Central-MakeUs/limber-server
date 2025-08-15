@@ -1,10 +1,6 @@
 package club.cmc.limber.domain.timer.api;
 
-import club.cmc.limber.common.response.CustomApiResponse;
-import club.cmc.limber.domain.timer.dto.TimerDeleteDto;
-import club.cmc.limber.domain.timer.dto.TimerRequestDto;
-import club.cmc.limber.domain.timer.dto.TimerResponseDto;
-import club.cmc.limber.domain.timer.dto.TimerStatusUpdateDto;
+import club.cmc.limber.domain.timer.dto.*;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
 import club.cmc.limber.domain.timer.service.TimerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,7 +56,16 @@ public class TimerController {
             @PathVariable Long timerId,
             @RequestBody TimerStatusUpdateDto dto
     ) {
-        return ResponseEntity.ok((timerService.updateTimerStatus(timerId, dto)));
+        return ResponseEntity.ok(timerService.updateTimerStatus(timerId, dto));
+    }
+
+    @Operation(summary = "특정 타이머 상태 전체 변경")
+    @PatchMapping("/status")
+    public ResponseEntity<TimerResponseDto> updateTimersStatusByUserAndCode(
+            @RequestBody SpecificTimerStatusUpdateDto dto
+    ) {
+        timerService.updateTimersStatusByUserAndCode(dto);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "타이머 상태 조회")

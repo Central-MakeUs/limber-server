@@ -4,10 +4,7 @@ package club.cmc.limber.domain.timer.service;
 import club.cmc.limber.domain.focus.entity.FocusType;
 import club.cmc.limber.domain.focus.exception.FocusTypeNotFoundException;
 import club.cmc.limber.domain.focus.repository.FocusTypeRepository;
-import club.cmc.limber.domain.timer.dto.TimerDeleteDto;
-import club.cmc.limber.domain.timer.dto.TimerRequestDto;
-import club.cmc.limber.domain.timer.dto.TimerResponseDto;
-import club.cmc.limber.domain.timer.dto.TimerStatusUpdateDto;
+import club.cmc.limber.domain.timer.dto.*;
 import club.cmc.limber.domain.timer.entity.Timer;
 import club.cmc.limber.domain.timer.enums.TimerCode;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
@@ -103,6 +100,15 @@ public class TimerServiceImpl implements TimerService {
 
         timer.setStatus(dto.status());
         return toResponseDto(timer);
+    }
+
+    @Override
+    @Transactional
+    public void updateTimersStatusByUserAndCode(
+            SpecificTimerStatusUpdateDto dto
+    ) {
+        timerRepository.findByUserIdAndDelFlagAndTimerCode(dto.userId(), "N", dto.timerCode())
+                .forEach(timer -> timer.setStatus(dto.status()));
     }
 
     private TimerResponseDto toResponseDto(Timer timer) {
