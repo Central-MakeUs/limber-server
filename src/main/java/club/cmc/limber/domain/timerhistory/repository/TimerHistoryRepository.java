@@ -140,10 +140,10 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
 
     @Query("""
     select 
-      h.focusTypeId        as focusTypeId,
-      f.title              as focusTypeTitle,
-      h.actualStartTime    as actualStartTime,
-      h.actualEndTime      as actualEndTime
+      h.focusTypeId,      
+      f.title,            
+      h.actualStartTime,  
+      h.actualEndTime    
     from club.cmc.limber.domain.timerhistory.entity.TimerHistory h
       left join club.cmc.limber.domain.focus.entity.FocusType f
         on f.id = h.focusTypeId
