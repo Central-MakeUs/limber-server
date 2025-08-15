@@ -78,7 +78,7 @@ public class TimerServiceImpl implements TimerService {
     @Override
     @Transactional(readOnly = true)
     public List<TimerResponseDto> getTimersByUserId(String userId) {
-        return timerRepository.findByUserIdAndDelFlag(userId, "N")
+        return timerRepository.findByUserIdAndDelFlagAndTimerCode(userId, "N", TimerCode.SCHEDULED)
                 .stream()
                 .map(this::toResponseDto)
                 .collect(Collectors.toList());
