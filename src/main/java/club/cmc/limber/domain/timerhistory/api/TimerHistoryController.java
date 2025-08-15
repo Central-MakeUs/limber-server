@@ -1,6 +1,5 @@
 package club.cmc.limber.domain.timerhistory.api;
 
-import club.cmc.limber.common.response.CustomApiResponse;
 import club.cmc.limber.domain.timerhistory.dto.history.*;
 import club.cmc.limber.domain.timerhistory.service.TimerHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -115,12 +114,10 @@ public class TimerHistoryController {
             }
     )
     @GetMapping("/latest-id")
-    public ResponseEntity<?> getLatestHistoryId(
+    public ResponseEntity<?> getLatestHistoryWithRetrospect(
             @Parameter(description = "사용자 ID", required = true) @RequestParam String userId,
             @Parameter(description = "타이머 ID", required = true) @RequestParam Long timerId
     ) {
-        return timerHistoryService.findLatestHistoryId(userId, timerId)
-                .<ResponseEntity<?>>map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.noContent().build());
+        return ResponseEntity.ok(timerHistoryService.getLatestHistoryWithRetrospect(userId, timerId));
     }
 }

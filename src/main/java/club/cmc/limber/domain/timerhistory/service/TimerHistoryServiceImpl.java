@@ -103,11 +103,13 @@ public class TimerHistoryServiceImpl implements TimerHistoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Long> findLatestHistoryId(String userId, Long timerId) {
-        return timerHistoryRepository
+    public TimerHistoryWithRetrospectDto getLatestHistoryWithRetrospect(String userId, Long timerId) {
+        Long latestHistoryId = timerHistoryRepository
                 .findTopByUserIdAndTimerIdAndDelFlagOrderByHistoryDtDescIdDesc(userId, timerId, "N")
-                .map(TimerHistory::getId);
+                .map(TimerHistory::getId)
+                .orElse(0L);;
+
+        return timerHistoryRepository.searchWithRetrospectByHistoryId(latestHistoryId);
     }
 
 }
-

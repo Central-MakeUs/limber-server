@@ -106,5 +106,35 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
     Optional<TimerHistory> findTopByUserIdAndTimerIdAndDelFlagOrderByHistoryDtDescIdDesc(
             String userId, Long timerId, String delFlag
     );
+
+    @Query("""
+    select new club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryWithRetrospectDto(
+      h.id,
+      h.timerId,
+      h.userId,
+      h.title,
+      h.focusTypeId,
+      h.repeatCycleCode,
+      h.repeatDays,
+      h.historyDt,
+      h.historyStatus,
+      h.failReason,
+      h.startTime,
+      h.endTime,
+      case when tr.id is not null then true else false end,
+      tr.id,
+      tr.immersion,
+      tr.comment,
+      f.title,
+      null
+    )
+    from club.cmc.limber.domain.timerhistory.entity.TimerHistory h
+      left join club.cmc.limber.domain.timerretrospect.entity.TimerRetrospect tr
+        on tr.timerHistoryId = h.id and tr.delFlag = 'N'
+      left join club.cmc.limber.domain.focus.entity.FocusType f
+        on f.id = h.focusTypeId
+    where h.id = :historyId
+    """)
+    TimerHistoryWithRetrospectDto searchWithRetrospectByHistoryId(Long historyId);
 }
 

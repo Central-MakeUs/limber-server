@@ -3,9 +3,9 @@ package club.cmc.limber.domain.timerhistory.service;
 import club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryRequestDto;
 import club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryResponseDto;
 import club.cmc.limber.domain.timerhistory.dto.history.TimerHistorySearchRequestDto;
+import club.cmc.limber.domain.timerhistory.dto.history.TimerHistoryWithRetrospectDto;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface TimerHistoryService {
@@ -18,5 +18,5 @@ public interface TimerHistoryService {
     // 새 검색 메서드 (ALL: List<TimerHistoryWithRetrospectDto>, WEEKLY: List<TimerHistoryWeeklyGroupDto>)
     Object searchWithRetrospect(TimerHistorySearchRequestDto req);
 
-    Optional<Long> findLatestHistoryId(String userId, Long timerId);
+    TimerHistoryWithRetrospectDto getLatestHistoryWithRetrospect(String userId, Long timerId);
 }
