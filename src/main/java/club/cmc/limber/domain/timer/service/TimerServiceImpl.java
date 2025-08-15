@@ -50,7 +50,7 @@ public class TimerServiceImpl implements TimerService {
             }
         }
 
-        boolean overlap = hasOverlappingRunningTimer(dto.userId(), dto.startTime(), dto.endTime(), 0L);
+        boolean overlap = hasOverlappingRunningTimer(dto.userId(), 0L);
         if (overlap) {
             throw new TimerConflictException();
         }
@@ -89,8 +89,6 @@ public class TimerServiceImpl implements TimerService {
         if (dto.status() == TimerStatus.ON) {
             boolean overlap = hasOverlappingRunningTimer(
                     timer.getUserId(),
-                    timer.getStartTime(),
-                    timer.getEndTime(),
                     timerId
             );
             if (overlap) {
@@ -158,8 +156,6 @@ public class TimerServiceImpl implements TimerService {
     @Transactional(readOnly = true)
     public boolean hasOverlappingRunningTimer(
             String userId,
-            LocalTime start,
-            LocalTime end,
             Long originalTimerId
     ) {
         List<Timer> runningTimers =
@@ -170,12 +166,8 @@ public class TimerServiceImpl implements TimerService {
                 );
 
         return runningTimers.stream()
-                .filter(timer -> !Objects.equals(timer.getId(), originalTimerId))
-                .anyMatch(t ->
-                        (start.isBefore(t.getEndTime()) && end.isAfter(t.getStartTime()))
-        );
+                .anyMatch(timer -> !Objects.equals(timer.getId(), originalTimerId));
     }
-
 
     // 공통: ID로 조회, 없으면 TimerNotFoundException
     @Transactional(readOnly = true)
