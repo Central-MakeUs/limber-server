@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long> {
 
@@ -102,5 +103,8 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
     """)
     boolean existsInMinuteSlot(Long timerId, LocalDateTime slotStart, LocalDateTime slotEnd);
 
+    Optional<TimerHistory> findTopByUserIdAndTimerIdAndDelFlagOrderByHistoryDtDescIdDesc(
+            String userId, Long timerId, String delFlag
+    );
 }
 

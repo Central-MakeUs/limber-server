@@ -104,4 +104,23 @@ public class TimerHistoryController {
                 .created(URI.create("/api/timer-histories/" + res.id()))
                 .body(res);
     }
+
+    @Operation(
+            summary = "최신 타이머 이력 ID 조회",
+            description = "userId와 timerId로 최신(historyDt 기준) 이력의 ID를 반환합니다. (delFlag='N'만 대상)",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공",
+                            content = @Content(schema = @Schema(implementation = Long.class))),
+                    @ApiResponse(responseCode = "204", description = "해당 조건의 이력이 없음")
+            }
+    )
+    @GetMapping("/latest-id")
+    public ResponseEntity<?> getLatestHistoryId(
+            @Parameter(description = "사용자 ID", required = true) @RequestParam String userId,
+            @Parameter(description = "타이머 ID", required = true) @RequestParam Long timerId
+    ) {
+        return timerHistoryService.findLatestHistoryId(userId, timerId)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
+    }
 }
