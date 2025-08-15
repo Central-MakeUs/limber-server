@@ -5,6 +5,6 @@ import club.cmc.limber.common.response.BusinessException;
 
 public class FocusTypeNotFoundException extends BusinessException {
     public FocusTypeNotFoundException() {
-        super(ErrorCode.NOT_FOUND_TIMER);
+        super(ErrorCode.NOT_FOUND_FOCUS_TYPE);
     }
 }
