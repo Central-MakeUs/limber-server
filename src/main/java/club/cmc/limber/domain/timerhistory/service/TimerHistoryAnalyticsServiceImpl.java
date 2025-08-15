@@ -118,7 +118,11 @@ public class TimerHistoryAnalyticsServiceImpl implements TimerHistoryAnalyticsSe
     // ========== (5) FocusType별 actual 합 ==========
     @Override
     @Transactional(readOnly = true)
-    public List<FocusDistributionDto> getFocusDistribution(String userId, LocalDate startDate, LocalDate endDate) {
+    public List<FocusDistributionDto> getFocusDistribution(
+            String userId,
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
         var range = toRange(startDate, endDate);
 
         // 1) 쿼리에서 focusTypeName까지 받아오기
@@ -141,7 +145,7 @@ public class TimerHistoryAnalyticsServiceImpl implements TimerHistoryAnalyticsSe
         // 3) DTO 변환 + 정렬 (원하는 기준으로 변경 가능)
         return acc.entrySet().stream()
                 .map(e -> new FocusDistributionDto(e.getKey(), e.getValue().name(), e.getValue().total()))
-                .sorted(Comparator.comparing(FocusDistributionDto::focusTypeName)) // 이름 기준 정렬
+                .sorted(Comparator.comparingInt(FocusDistributionDto::totalActualMinutes).reversed()) // 총 소요분 내림차순
                 .toList();
     }
 
