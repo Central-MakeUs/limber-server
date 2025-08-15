@@ -1,6 +1,5 @@
 package club.cmc.limber.domain.timerhistory.entity;
 
-import club.cmc.limber.domain.focus.entity.FocusType;
 import club.cmc.limber.domain.timer.enums.RepeatCycleCode;
 import club.cmc.limber.domain.timerhistory.enums.HistoryStatus;
 import jakarta.persistence.*;
@@ -12,7 +11,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "TIMER_HISTORY")
+@Table(
+        name = "TIMER_HISTORY",
+        indexes = {
+                @Index(name = "idx_th_user_timer_dt", columnList = "USER_ID, TIMER_ID, HISTORY_DT")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
