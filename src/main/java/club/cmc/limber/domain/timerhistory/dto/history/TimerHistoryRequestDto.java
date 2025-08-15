@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public record TimerHistoryRequestDto(
         Long timerId,
@@ -19,13 +20,13 @@ public record TimerHistoryRequestDto(
         LocalDateTime historyDt,
         HistoryStatus historyStatus,
         FailReason failReason,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        @Schema(type = "string", example = "2025-08-16 19:00:00")
-        LocalDateTime startTime,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        @Schema(type = "string", example = "2025-08-16 21:00:00")
-        LocalDateTime endTime,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+        @DateTimeFormat(pattern = "HH:mm")
+        @Schema(type = "string", example = "19:00")
+        LocalTime startTime,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+        @DateTimeFormat(pattern = "HH:mm")
+        @Schema(type = "string", example = "19:00")
+        LocalTime endTime,
         String regId
 ) {}

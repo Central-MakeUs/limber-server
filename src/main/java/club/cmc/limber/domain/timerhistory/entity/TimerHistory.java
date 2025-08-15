@@ -60,10 +60,10 @@ public class TimerHistory {
     private FailReason failReason;
 
     @Column(name = "START_TIME", nullable = false)
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
     @Column(name = "END_TIME", nullable = false)
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
     @Column(name = "ACUTAL_START_TIME", nullable = false)
     private LocalDateTime actualStartTime;

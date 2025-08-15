@@ -25,11 +25,11 @@ public record TimerHistoryResponseDto(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         @Schema(type = "string", example = "2025-08-16 19:00:00")
-        LocalDateTime startTime,
+        LocalTime startTime,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         @Schema(type = "string", example = "2025-08-16 21:00:00")
-        LocalDateTime endTime
+        LocalTime endTime
 
 ) {
     public static TimerHistoryResponseDto from(TimerHistory entity) {

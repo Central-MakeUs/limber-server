@@ -57,8 +57,8 @@ public class TimerFacade {
 
                 .failReason(dto.failReason())
 
-                .startTime(plannedStart)
-                .endTime(plannedEnd)
+                .startTime(timer.getStartTime())
+                .endTime(timer.getEndTime())
                 // ACUTAL_* 컬럼은 NOT NULL 제약이 있으므로 기본값 보정
                 // 실제 시작 시각을 모를 경우 계획 시작 시각으로 기록
                 .actualStartTime(plannedStart)
