@@ -108,9 +108,11 @@ public class TimerHistoryController {
             summary = "최신 타이머 이력 ID 조회",
             description = "userId와 timerId로 최신(historyDt 기준) 이력의 ID를 반환합니다. (delFlag='N'만 대상)",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공",
-                            content = @Content(schema = @Schema(implementation = Long.class))),
-                    @ApiResponse(responseCode = "204", description = "해당 조건의 이력이 없음")
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "성공",
+                            content = @Content(schema = @Schema(implementation = TimerHistoryWithRetrospectDto.class))
+                    )
             }
     )
     @GetMapping("/latest-id")
