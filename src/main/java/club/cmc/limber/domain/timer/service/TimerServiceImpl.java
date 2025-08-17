@@ -10,6 +10,7 @@ import club.cmc.limber.domain.timer.enums.TimerCode;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
 import club.cmc.limber.domain.timer.exception.TimerConflictException;
 import club.cmc.limber.domain.timer.exception.TimerNotFoundException;
+import club.cmc.limber.domain.timer.exception.WrongTimerDeleteRequestParameterException;
 import club.cmc.limber.domain.timer.repository.TimerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,7 +135,8 @@ public class TimerServiceImpl implements TimerService {
         deactivateTimer(timerId);
     }
 
-    private void deactivateTimer(Long timerId) {
+    @Transactional // readOnly=false (기본값)
+    public void deactivateTimer(Long timerId) {
         Timer timer = getTimerOrThrow(timerId);
         timer.setDelFlag("Y");
         timer.setStatus(TimerStatus.OFF);
@@ -142,8 +144,10 @@ public class TimerServiceImpl implements TimerService {
 
     @Override
     public void deleteTimer(TimerDeleteDto timerDeleteDto) {
-        timerDeleteDto.timerIds().stream()
-                .forEach(timerId -> deactivateTimer(timerId));
+        if (timerDeleteDto == null || timerDeleteDto.timerIds() == null || timerDeleteDto.timerIds().isEmpty())
+            throw new WrongTimerDeleteRequestParameterException();
+
+        timerDeleteDto.timerIds().forEach(this::deactivateTimer);
     }
 
     @Override
