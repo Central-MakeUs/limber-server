@@ -16,6 +16,11 @@ public interface TimerRepository extends JpaRepository<Timer, Long> {
 
     List<Timer> findByUserIdAndDelFlagAndTimerCode(String userId, String delFlag, TimerCode timerCode);
 
+    boolean existsByUserIdAndStatusAndDelFlagAndIdNotAndStartTimeBeforeAndEndTimeAfter(
+            String userId, TimerStatus status, String delFlag, Long idToExclude,
+            LocalTime endTime, LocalTime startTime
+    );
+
     List<Timer> findByUserIdAndStatusAndDelFlag(String userId, TimerStatus status, String delFlag);
 
     long countByUserIdAndDelFlagAndTimerCode(String userId, String delFlag, TimerCode timerCode);
