@@ -94,7 +94,7 @@ public class TimerController {
     }
 
     @Operation(summary = "타이머 삭제")
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<Void> deleteTimer(
             @RequestBody TimerDeleteDto dto
     ) {

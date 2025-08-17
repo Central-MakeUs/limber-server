@@ -9,7 +9,6 @@ import club.cmc.limber.domain.timer.entity.Timer;
 import club.cmc.limber.domain.timer.enums.TimerCode;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
 import club.cmc.limber.domain.timer.exception.TimerConflictException;
-import club.cmc.limber.domain.timer.exception.TimerLimitExceededException;
 import club.cmc.limber.domain.timer.exception.TimerNotFoundException;
 import club.cmc.limber.domain.timer.repository.TimerRepository;
 import org.springframework.stereotype.Service;
@@ -37,24 +36,6 @@ public class TimerServiceImpl implements TimerService {
         FocusType focusType = focusTypeRepository.findById(dto.focusTypeId())
                 .orElseThrow(FocusTypeNotFoundException::new);
 
-        // IMMEDIATE 타입만 조회하여 개수 제한
-        if (TimerCode.IMMEDIATE.equals(dto.timerCode())) {
-            long immediateCount = timerRepository.countByUserIdAndDelFlagAndTimerCode(
-                    dto.userId(),
-                    "N",
-                    TimerCode.IMMEDIATE
-            );
-
-            if (immediateCount >= 10) {
-                throw new TimerLimitExceededException();
-            }
-        }
-
-        boolean overlap = hasOverlappingRunningTimer(dto.userId(), 0L);
-        if (overlap) {
-            throw new TimerConflictException();
-        }
-
         Timer timer = new Timer();
         timer.setUserId(dto.userId());
         timer.setTitle(dto.title());
@@ -67,6 +48,19 @@ public class TimerServiceImpl implements TimerService {
         timer.setStatus(TimerStatus.ON);
         timer.setDelFlag("N");
         timer.setRegId(dto.userId());
+
+        boolean overlap = hasOverlappingRunningTimer(
+                dto.userId(),
+                dto.startTime(),
+                dto.endTime(),
+                0L
+        );
+        if (overlap) {
+            if (dto.timerCode().equals(TimerCode.SCHEDULED))
+                timer.setStatus(TimerStatus.OFF);
+            else
+                throw new TimerConflictException();
+        }
 
         Timer saved = timerRepository.save(timer);
         return toResponseDto(saved);
@@ -89,6 +83,8 @@ public class TimerServiceImpl implements TimerService {
         if (dto.status() == TimerStatus.ON) {
             boolean overlap = hasOverlappingRunningTimer(
                     timer.getUserId(),
+                    timer.getStartTime(),
+                    timer.getEndTime(),
                     timerId
             );
             if (overlap) {
@@ -156,6 +152,8 @@ public class TimerServiceImpl implements TimerService {
     @Transactional(readOnly = true)
     public boolean hasOverlappingRunningTimer(
             String userId,
+            LocalTime startTime,
+            LocalTime endTime,
             Long originalTimerId
     ) {
         List<Timer> runningTimers =
@@ -166,7 +164,9 @@ public class TimerServiceImpl implements TimerService {
                 );
 
         return runningTimers.stream()
-                .anyMatch(timer -> !Objects.equals(timer.getId(), originalTimerId));
+                .filter(runningTimer -> !Objects.equals(runningTimer.getId(), originalTimerId))
+                .anyMatch(runningTimer -> startTime.isBefore(runningTimer.getEndTime())
+                        && runningTimer.getStartTime().isBefore(endTime));
     }
 
     // 공통: ID로 조회, 없으면 TimerNotFoundException
