@@ -4,7 +4,10 @@ package club.cmc.limber.domain.timer.service;
 import club.cmc.limber.domain.focus.entity.FocusType;
 import club.cmc.limber.domain.focus.exception.FocusTypeNotFoundException;
 import club.cmc.limber.domain.focus.repository.FocusTypeRepository;
-import club.cmc.limber.domain.timer.dto.*;
+import club.cmc.limber.domain.timer.dto.SpecificTimerStatusUpdateDto;
+import club.cmc.limber.domain.timer.dto.TimerRequestDto;
+import club.cmc.limber.domain.timer.dto.TimerResponseDto;
+import club.cmc.limber.domain.timer.dto.TimerStatusUpdateDto;
 import club.cmc.limber.domain.timer.entity.Timer;
 import club.cmc.limber.domain.timer.enums.TimerCode;
 import club.cmc.limber.domain.timer.enums.TimerStatus;
@@ -17,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -130,24 +132,16 @@ public class TimerServiceImpl implements TimerService {
     }
 
     @Override
-    @Transactional
-    public void deleteTimer(Long timerId) {
-        deactivateTimer(timerId);
-    }
-
-    @Transactional // readOnly=false (기본값)
-    public void deactivateTimer(Long timerId) {
-        Timer timer = getTimerOrThrow(timerId);
-        timer.setDelFlag("Y");
-        timer.setStatus(TimerStatus.OFF);
-    }
-
-    @Override
-    public void deleteTimer(TimerDeleteDto timerDeleteDto) {
-        if (timerDeleteDto == null || timerDeleteDto.timerIds() == null || timerDeleteDto.timerIds().isEmpty())
+    @Transactional // readOnly=false
+    public void deleteTimer(List<Long> timerIds) {
+        if (timerIds == null || timerIds.isEmpty())
             throw new WrongTimerDeleteRequestParameterException();
 
-        timerDeleteDto.timerIds().forEach(this::deactivateTimer);
+        timerIds.forEach(timerId -> {
+            Timer timer = getTimerOrThrow(timerId);
+            timer.setDelFlag("Y");
+            timer.setStatus(TimerStatus.OFF);
+        });
     }
 
     @Override

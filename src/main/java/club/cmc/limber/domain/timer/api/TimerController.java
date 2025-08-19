@@ -89,7 +89,7 @@ public class TimerController {
     @Operation(summary = "타이머 삭제")
     @DeleteMapping("/{timerId}")
     public ResponseEntity<Void> deleteTimer(@PathVariable Long timerId) {
-        timerService.deleteTimer(timerId);
+        timerService.deleteTimer(List.of(timerId));
         return ResponseEntity.noContent().build();
     }
 
@@ -98,7 +98,7 @@ public class TimerController {
     public ResponseEntity<Void> deleteTimer(
             @RequestBody TimerDeleteDto dto
     ) {
-        timerService.deleteTimer(dto);
+        timerService.deleteTimer(dto.timerIds());
         return ResponseEntity.noContent().build();
     }
 }

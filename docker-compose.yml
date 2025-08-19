@@ -5,6 +5,7 @@ services:
       POSTGRES_USER: limber
       POSTGRES_PASSWORD: limber1234
       POSTGRES_DB: limberdb
+      TZ: Asia/Seoul   # ← 한국 시간대 설정
     ports:
       - "5432:5432"
     volumes:
