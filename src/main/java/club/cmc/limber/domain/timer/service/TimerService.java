@@ -13,7 +13,6 @@ public interface TimerService {
     void updateTimersStatusByUserAndCode(SpecificTimerStatusUpdateDto dto);
     TimerStatus getTimerStatus(Long timerId);
     TimerResponseDto getTimerById(Long timerId);
-    void deleteTimer(Long timerId);
-    void deleteTimer(TimerDeleteDto timerDeleteDto);
+    void deleteTimer(List<Long> timerIds);
     boolean hasOverlappingRunningTimer(String userId, LocalTime startTime, LocalTime endTime, Long originalTimerId);
 }
