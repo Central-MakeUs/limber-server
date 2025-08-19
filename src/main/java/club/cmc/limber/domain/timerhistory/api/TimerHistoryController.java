@@ -117,9 +117,11 @@ public class TimerHistoryController {
     )
     @GetMapping("/latest-id")
     public ResponseEntity<?> getLatestHistoryWithRetrospect(
-            @Parameter(description = "사용자 ID", required = true) @RequestParam String userId,
-            @Parameter(description = "타이머 ID", required = true) @RequestParam Long timerId
-    ) {
-        return ResponseEntity.ok(timerHistoryService.getLatestHistoryWithRetrospect(userId, timerId));
+            @RequestParam String userId, @RequestParam Long timerId) {
+        var dto = timerHistoryService.getLatestHistoryWithRetrospect(userId, timerId);
+        return (dto == null)
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(dto);
     }
+
 }
