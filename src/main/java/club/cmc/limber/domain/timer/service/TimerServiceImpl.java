@@ -74,8 +74,8 @@ public class TimerServiceImpl implements TimerService {
         return toResponseDto(saved);
     }
 
-    @Override
     @Transactional(readOnly = true)
+    @Override
     public List<TimerResponseDto> getTimersByUserId(String userId) {
         return timerRepository.findByUserIdAndDelFlagAndTimerCode(userId, "N", TimerCode.SCHEDULED)
                 .stream()
@@ -83,27 +83,49 @@ public class TimerServiceImpl implements TimerService {
                 .collect(Collectors.toList());
     }
 
-    @Override
     @Transactional
     public TimerResponseDto updateTimerStatus(Long timerId, TimerStatusUpdateDto dto) {
-        Timer timer = getTimerOrThrow(timerId);
+        // 1) 대상 조회
+        final Timer timer = getTimerOrThrow(timerId);
+        final TimerStatus newStatus = dto.status();
 
-        if (dto.status() == TimerStatus.ON) {
-            if (hasOverlappingRunningTimer(
-                    timer.getUserId(),
-                    timer.getStartTime(),
-                    timer.getEndTime(),
-                    timerId
-            ))
-                throw new TimerConflictException();
+        // 2) 변화 없음 → 빠른 반환
+        if (timer.getStatus() == newStatus) {
+            return toResponseDto(timer);
         }
 
-        timer.setStatus(dto.status());
+        // 3) ON으로 전환 시에만 충돌 검증
+        if (newStatus == TimerStatus.ON) {
+            assertNoConflictsWhenTurningOn(timer, timerId);
+        }
+
+        // 4) 상태 업데이트 후 응답
+        timer.setStatus(newStatus);
         return toResponseDto(timer);
     }
 
-    @Override
+    /**
+     * 타이머를 ON으로 전환할 때의 충돌 조건을 검사한다.
+     * - 현재 시간과 예약 구간이 겹치면 안 됨
+     * - 동일 사용자 기준 다른 실행 중 타이머와 예약 구간이 겹치면 안 됨
+     * 충돌 시 TimerConflictException 발생.
+     */
+    private void assertNoConflictsWhenTurningOn(Timer timer, Long selfTimerId) {
+        boolean overlapsNow = isNowWithinRange(timer.getStartTime(), timer.getEndTime());
+        boolean overlapsOthers = hasOverlappingRunningTimer(
+                timer.getUserId(),
+                timer.getStartTime(),
+                timer.getEndTime(),
+                selfTimerId
+        );
+
+        if (overlapsNow || overlapsOthers) {
+            throw new TimerConflictException();
+        }
+    }
+
     @Transactional
+    @Override
     public void updateTimersStatusByUserAndCode(
             SpecificTimerStatusUpdateDto dto
     ) {
@@ -124,20 +146,20 @@ public class TimerServiceImpl implements TimerService {
         );
     }
 
-    @Override
     @Transactional(readOnly = true)
+    @Override
     public TimerStatus getTimerStatus(Long timerId) {
         return getTimerOrThrow(timerId).getStatus();
     }
 
-    @Override
     @Transactional(readOnly = true)
+    @Override
     public TimerResponseDto getTimerById(Long timerId) {
         return toResponseDto(getTimerOrThrow(timerId));
     }
 
-    @Override
     @Transactional // readOnly=false
+    @Override
     public void deleteTimer(List<Long> timerIds) {
         if (timerIds == null || timerIds.isEmpty())
             throw new WrongTimerDeleteRequestParameterException();
@@ -149,8 +171,8 @@ public class TimerServiceImpl implements TimerService {
         });
     }
 
-    @Override
     @Transactional(readOnly = true)
+    @Override
     public boolean hasOverlappingRunningTimer(
             String userId,
             LocalTime startTime,
@@ -161,26 +183,31 @@ public class TimerServiceImpl implements TimerService {
         return timerRepository.existsOverlappingTimer(userId, TimerStatus.ON, excludeId, startTime, endTime);
     }
 
-    public boolean isNowWithinRange(
-            LocalTime startTime,
-            LocalTime endTime
-    ) {
-        if (startTime.equals(endTime)) {
-            // 시작과 끝이 같다면 24시간 동작으로 간주하려면 true,
-            // 0초짜리로 간주하려면 false로 바꾸세요.
-            return false;
+    /**
+     * 현재 시간이 [start, end] 범위에 포함되는지 여부를 분 단위로 판별한다.
+     * - start == end 인 경우: 24시간 전체 포함(true)로 간주
+     * - 끝점 포함 규칙: [start, end]
+     * - 자정 넘김(start > end)도 지원: 예) 23:00~01:00 → 23:00~24:00, 00:00~01:00
+     */
+    public static boolean isNowWithinRange(LocalTime start, LocalTime end) {
+        return isWithinRange(start, end, LocalTime.now());
+    }
+
+    public static boolean isWithinRange(LocalTime start, LocalTime end, LocalTime now) {
+        // 같은 시각 → 24시간으로 간주
+        if (start.equals(end)) {
+            return true;
         }
 
-        LocalTime nowTime = LocalTime.now();
-        if (startTime.isBefore(endTime)) {
-            // 같은 날 안에서 끝남: [start, end)
-            return !nowTime.isBefore(startTime) && nowTime.isBefore(endTime);
+        if (start.isBefore(end)) {
+            // 같은 날 안에서 끝남: [start, end]
+            return !now.isBefore(start) && !now.isAfter(end);
         } else {
-            // 자정을 넘어감: 예) 23:00 ~ 01:00
-            // [start, 24:00) U [00:00, end)
-            return !nowTime.isBefore(startTime) || nowTime.isBefore(endTime);
+            // 자정을 넘어감: [start, 24:00] ∪ [00:00, end]
+            return !now.isBefore(start) || !now.isAfter(end);
         }
     }
+
 
     // 공통: ID로 조회, 없으면 TimerNotFoundException
     @Transactional(readOnly = true)
