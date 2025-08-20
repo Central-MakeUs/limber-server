@@ -26,22 +26,24 @@ public interface TimerRepository extends JpaRepository<Timer, Long> {
       and t.delFlag = 'N'
       and t.id <> :excludeId
       and (
-            -- 새 구간이 자정 안 넘는 경우
-            (:newStart < :newEnd and
-                (
-                    (t.startTime < t.endTime and :newStart < t.endTime and :newEnd > t.startTime)
-                 or (t.startTime >= t.endTime and (:newStart < t.endTime or :newEnd > t.startTime))
-                )
+            (
+              :newStart < :newEnd and
+              (
+                ( t.startTime < t.endTime and :newStart < t.endTime and :newEnd > t.startTime )
+                or
+                ( t.startTime >= t.endTime and ( :newStart < t.endTime or :newEnd > t.startTime ) )
+              )
             )
-         or
-            -- 새 구간이 자정 넘는 경우
-            (:newStart >= :newEnd and
-                (
-                    (t.startTime < t.endTime and (:newStart < t.endTime or :newEnd > t.startTime))
-                 or (t.startTime >= t.endTime)
-                )
+            or
+            (
+              :newStart >= :newEnd and
+              (
+                ( t.startTime < t.endTime and ( :newStart < t.endTime or :newEnd > t.startTime ) )
+                or
+                ( t.startTime >= t.endTime )
+              )
             )
-      )
+          )
     """)
     boolean existsOverlappingTimer(
             @Param("userId") String userId,
