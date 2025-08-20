@@ -22,6 +22,8 @@ services:
     depends_on:
       - postgres
     environment:
+      TZ: "Asia/Seoul"
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Seoul"
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/limberdb
       SPRING_DATASOURCE_USERNAME: limber
       SPRING_DATASOURCE_PASSWORD: limber1234
