@@ -66,7 +66,7 @@ public class TimerServiceImpl implements TimerService {
         }
 
         // 현재 시간과 예약 시작 ~ 예약 종료 겹치는지 판별
-        if (isNowWithinRange(dto.startTime(), dto.endTime())) {
+        if (dto.timerCode().equals(TimerCode.SCHEDULED) && isNowWithinRange(dto.startTime(), dto.endTime())) {
             timer.setStatus(TimerStatus.OFF);
         }
 
