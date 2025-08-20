@@ -15,6 +15,7 @@ import club.cmc.limber.domain.timer.exception.TimerConflictException;
 import club.cmc.limber.domain.timer.exception.TimerNotFoundException;
 import club.cmc.limber.domain.timer.exception.WrongTimerDeleteRequestParameterException;
 import club.cmc.limber.domain.timer.repository.TimerRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class TimerServiceImpl implements TimerService {
 
@@ -36,6 +38,7 @@ public class TimerServiceImpl implements TimerService {
     @Override
     @Transactional
     public TimerResponseDto createTimer(TimerRequestDto dto) {
+        log.info("TimerRequestDto : {}", dto);
         FocusType focusType = focusTypeRepository.findById(dto.focusTypeId())
                 .orElseThrow(FocusTypeNotFoundException::new);
 
