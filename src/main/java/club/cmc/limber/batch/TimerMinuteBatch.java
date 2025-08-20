@@ -41,8 +41,13 @@ public class TimerMinuteBatch {
         if (candidates.isEmpty()) return;
 
         for (Timer t : candidates) {
+            boolean crossesMidnight = !t.getStartTime().isBefore(t.getEndTime()); // start >= end
+
+            // 23:00~01:00 같은 케이스는 '시작일'이 전날
+            LocalDate logicalStartDate = crossesMidnight ? today.minusDays(1) : today;
+
             // 오늘 대상 아니면 skip
-            if (!TimerScheduleEvaluator.isEligibleToday(t.getRepeatCycleCode(), t.getRepeatDays(), today)) {
+            if (!TimerScheduleEvaluator.isEligibleToday(t.getRepeatCycleCode(), t.getRepeatDays(), logicalStartDate)) {
                 continue;
             }
 
@@ -55,7 +60,7 @@ public class TimerMinuteBatch {
             }
 
             // 실제 시작/종료
-            LocalDateTime actualStart = LocalDateTime.of(today, t.getStartTime());
+            LocalDateTime actualStart = LocalDateTime.of(logicalStartDate, t.getStartTime());
             LocalDateTime actualEnd = now;
 
             String repeatDaysSafe = (t.getRepeatDays() == null) ? "" : t.getRepeatDays();

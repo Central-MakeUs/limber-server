@@ -65,6 +65,11 @@ public class TimerServiceImpl implements TimerService {
                 throw new TimerConflictException();
         }
 
+        // 현재 시간과 예약 시작 ~ 예약 종료 겹치는지 판별
+        if (isNowWithinRange(dto.startTime(), dto.endTime())) {
+            timer.setStatus(TimerStatus.OFF);
+        }
+
         Timer saved = timerRepository.save(timer);
         return toResponseDto(saved);
     }
@@ -153,10 +158,28 @@ public class TimerServiceImpl implements TimerService {
             Long originalTimerId
     ) {
         Long excludeId = (originalTimerId == null) ? -1L : originalTimerId; // IdNot 사용 대비
-        return timerRepository
-                .existsByUserIdAndStatusAndDelFlagAndIdNotAndStartTimeBeforeAndEndTimeAfter(
-                        userId, TimerStatus.ON, "N", excludeId, endTime, startTime
-                );
+        return timerRepository.existsOverlappingTimer(userId, TimerStatus.ON, excludeId, startTime, endTime);
+    }
+
+    public boolean isNowWithinRange(
+            LocalTime startTime,
+            LocalTime endTime
+    ) {
+        if (startTime.equals(endTime)) {
+            // 시작과 끝이 같다면 24시간 동작으로 간주하려면 true,
+            // 0초짜리로 간주하려면 false로 바꾸세요.
+            return false;
+        }
+
+        LocalTime nowTime = LocalTime.now();
+        if (startTime.isBefore(endTime)) {
+            // 같은 날 안에서 끝남: [start, end)
+            return !nowTime.isBefore(startTime) && nowTime.isBefore(endTime);
+        } else {
+            // 자정을 넘어감: 예) 23:00 ~ 01:00
+            // [start, 24:00) U [00:00, end)
+            return !nowTime.isBefore(startTime) || nowTime.isBefore(endTime);
+        }
     }
 
     // 공통: ID로 조회, 없으면 TimerNotFoundException
