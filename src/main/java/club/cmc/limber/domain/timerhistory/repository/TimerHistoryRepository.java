@@ -80,7 +80,6 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
         on f.id = h.focusTypeId
     where h.userId = :userId
       and h.delFlag = 'N'
-      and h.historyStatus = club.cmc.limber.domain.timerhistory.enums.HistoryStatus.SENT
       and (
             (:onlyIncomplete = false)
          or (:onlyIncomplete = true and tr.id is null)
@@ -91,6 +90,7 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
             @Param("userId") String userId,
             @Param("onlyIncomplete") boolean onlyIncomplete
     );
+//    and h.historyStatus = club.cmc.limber.domain.timerhistory.enums.HistoryStatus.SENT
 
 
     // 동일 타이머/동일 분(±59초) 기록 중복 방지
