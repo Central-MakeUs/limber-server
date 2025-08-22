@@ -162,7 +162,6 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
         on f.id = h.focusTypeId
     where h.userId = :userId
       and h.delFlag = 'N'
-      and h.historyStatus = club.cmc.limber.domain.timerhistory.enums.HistoryStatus.SENT
       and h.actualStartTime between :start and :end
     """)
     List<FocusTimeSlice> findFocusSlices(
@@ -170,5 +169,6 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );
+    //      and h.historyStatus = club.cmc.limber.domain.timerhistory.enums.HistoryStatus.SENT
 }
 
