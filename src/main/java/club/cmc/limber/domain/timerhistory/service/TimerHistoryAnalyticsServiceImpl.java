@@ -30,8 +30,8 @@ public class TimerHistoryAnalyticsServiceImpl implements TimerHistoryAnalyticsSe
         var range = toRange(startDate, endDate);
 
         // SENT + actualStartTime이 기간에 "포함"되는 데이터만 DB에서 조회
-        List<TimerHistory> rows = repo.findByUserIdAndStatusAndActualStartBetween(
-                userId, HistoryStatus.SENT, range.start(), range.end());
+        List<TimerHistory> rows = repo.findByUserIdAndActualStartBetween(
+                userId, range.start(), range.end());
 
         int[] actual = new int[7]; // 요일별 합(분)
 
@@ -54,8 +54,8 @@ public class TimerHistoryAnalyticsServiceImpl implements TimerHistoryAnalyticsSe
     @Transactional(readOnly = true)
     public List<WeekdayImmersionDto> getImmersionByWeekday(String userId, LocalDate startDate, LocalDate endDate) {
         var range = toRange(startDate, endDate);
-        List<TimerHistory> rows = repo.findByUserIdAndStatusAndActualStartBetween(
-                userId, HistoryStatus.SENT, range.start(), range.end());
+        List<TimerHistory> rows = repo.findByUserIdAndActualStartBetween(
+                userId, range.start(), range.end());
 
         int[] sched = new int[7];
         int[] act   = new int[7];
@@ -82,8 +82,8 @@ public class TimerHistoryAnalyticsServiceImpl implements TimerHistoryAnalyticsSe
     @Transactional(readOnly = true)
     public TotalActualDto getTotalActual(String userId, LocalDate startDate, LocalDate endDate) {
         var range = toRange(startDate, endDate);
-        List<TimerHistory> rows = repo.findByUserIdAndStatusAndActualStartBetween(
-                userId, HistoryStatus.SENT, range.start(), range.end());
+        List<TimerHistory> rows = repo.findByUserIdAndActualStartBetween(
+                userId, range.start(), range.end());
 
         int total = rows.stream()
                 .mapToInt(h -> minutesBetween(h.getActualStartTime(), h.getActualEndTime()))
@@ -98,8 +98,8 @@ public class TimerHistoryAnalyticsServiceImpl implements TimerHistoryAnalyticsSe
     @Transactional(readOnly = true)
     public TotalImmersionDto getTotalImmersion(String userId, LocalDate startDate, LocalDate endDate) {
         var range = toRange(startDate, endDate);
-        List<TimerHistory> rows = repo.findByUserIdAndStatusAndActualStartBetween(
-                userId, HistoryStatus.SENT, range.start(), range.end());
+        List<TimerHistory> rows = repo.findByUserIdAndActualStartBetween(
+                userId, range.start(), range.end());
 
         int totalAct = 0;
         int totalSched = 0;

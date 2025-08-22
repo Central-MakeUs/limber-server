@@ -33,6 +33,19 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
             @Param("endDt") LocalDateTime endDt
     );
 
+    @Query("""
+        SELECT h
+          FROM TimerHistory h
+         WHERE h.userId = :userId
+           AND h.delFlag = 'N'
+           AND h.actualStartTime BETWEEN :startDt AND :endDt
+        """)
+    List<TimerHistory> findByUserIdAndActualStartBetween(
+            @Param("userId") String userId,
+            @Param("startDt") LocalDateTime startDt,
+            @Param("endDt") LocalDateTime endDt
+    );
+
     /**
      * FAILED + delFlag='N' + historyDt가 [startDt, endDt] 구간에 '포함'되는 데이터
      * - 실패 사유 집계 (6)용
