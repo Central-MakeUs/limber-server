@@ -21,13 +21,6 @@ public class TimerHistoryFacade  {
 
     @Transactional
     public void deleteUserHistoryAndRetrospect(String userId) {
-        boolean existsHistory = timerHistoryRepository.existsByUserId(userId);
-        boolean existsRetrospect = timerRetrospectRepository.existsByUserId(userId);
-
-        if (!existsHistory && !existsRetrospect) {
-            throw new IllegalArgumentException("삭제할 데이터가 없습니다. userId=" + userId);
-        }
-
         timerHistoryRepository.deleteAllByUserId(userId);
         timerRetrospectRepository.deleteAllByUserId(userId);
     }
