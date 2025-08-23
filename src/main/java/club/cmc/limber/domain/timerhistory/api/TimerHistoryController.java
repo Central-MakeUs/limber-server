@@ -1,6 +1,7 @@
 package club.cmc.limber.domain.timerhistory.api;
 
 import club.cmc.limber.domain.timerhistory.dto.history.*;
+import club.cmc.limber.domain.timerhistory.facade.TimerHistoryFacade;
 import club.cmc.limber.domain.timerhistory.service.TimerHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,9 +23,14 @@ import java.util.List;
 public class TimerHistoryController {
 
     private final TimerHistoryService timerHistoryService;
+    private final TimerHistoryFacade timerHistoryFacade;
 
-    public TimerHistoryController(TimerHistoryService timerHistoryService) {
+    public TimerHistoryController(
+            TimerHistoryService timerHistoryService,
+            TimerHistoryFacade timerHistoryFacade
+    ) {
         this.timerHistoryService = timerHistoryService;
+        this.timerHistoryFacade = timerHistoryFacade;
     }
 
     @Operation(
@@ -122,6 +128,24 @@ public class TimerHistoryController {
         return (dto == null)
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(dto);
+    }
+
+    @Operation(
+            summary = "(데모데이) 해당 회원의 이력을 삭제)",
+            description = "해당하는 userId를 가진 회원의 이력 및 회고 내역을 삭제합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "성공"
+                    )
+            }
+    )
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> delete(
+            @PathVariable("userId") String userId
+    ) {
+        timerHistoryFacade.deleteUserHistoryAndRetrospect(userId);
+        return ResponseEntity.noContent().build();
     }
 
 }

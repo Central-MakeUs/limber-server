@@ -51,21 +51,22 @@ public record TimerHistoryWithRetrospectDto(
         ) {
                 if (historyDt == null || startTime == null || endTime == null) return "";
 
-                // 날짜 파트: 오늘/ N일 전 (한 달 넘어가도 N일 전 유지)
+                // 날짜 파트 (오늘 / N일 전)
+                LocalDate baseDate = historyDt.toLocalDate();
                 LocalDate today = LocalDate.now(zone);
-                long daysDiff = ChronoUnit.DAYS.between(historyDt.toLocalDate(), today);
+                long daysDiff = ChronoUnit.DAYS.between(baseDate, today);
                 String dayPart = (daysDiff == 0) ? "오늘" : daysDiff + "일 전";
 
-                // 시간 파트: start~end 소요시간 (자정 넘어가는 케이스 처리)
-                long minutes;
-                if (endTime.isBefore(startTime)) {
-                        // 자정 경과: end + 24h - start
-                        minutes = Duration.between(startTime, endTime.plusHours(24)).toMinutes();
-                } else {
-                        minutes = Duration.between(startTime, endTime).toMinutes();
+                // 시간 파트 (자정 경과 및 DST 안전 처리)
+                ZonedDateTime start = ZonedDateTime.of(baseDate, startTime, zone);
+                ZonedDateTime end   = ZonedDateTime.of(baseDate, endTime, zone);
+                if (end.isBefore(start)) {
+                        end = end.plusDays(1); // 자정 넘김
                 }
+
+                long minutes = Duration.between(start, end).toMinutes(); // 항상 0 이상
                 long hours = minutes / 60;
-                long mins = minutes % 60;
+                long mins  = minutes % 60;
 
                 StringBuilder timePart = new StringBuilder();
                 if (hours > 0) timePart.append(hours).append("시간 ");
@@ -73,4 +74,5 @@ public record TimerHistoryWithRetrospectDto(
 
                 return dayPart + ", " + timePart;
         }
+
 }

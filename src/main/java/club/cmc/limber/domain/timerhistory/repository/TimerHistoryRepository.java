@@ -157,5 +157,10 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );
+
+    void deleteAllByUserId(String userId);
+
+    boolean existsByUserId(String userId);
+
 }
 

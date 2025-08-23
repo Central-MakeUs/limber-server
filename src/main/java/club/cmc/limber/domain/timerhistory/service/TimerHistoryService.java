@@ -19,4 +19,5 @@ public interface TimerHistoryService {
     Object searchWithRetrospect(TimerHistorySearchRequestDto req);
 
     TimerHistoryWithRetrospectDto getLatestHistoryWithRetrospect(String userId, Long timerId);
+
 }
