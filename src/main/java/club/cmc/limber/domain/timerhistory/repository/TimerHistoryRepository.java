@@ -33,6 +33,19 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
             @Param("endDt") LocalDateTime endDt
     );
 
+    @Query("""
+        SELECT h
+          FROM TimerHistory h
+         WHERE h.userId = :userId
+           AND h.delFlag = 'N'
+           AND h.actualStartTime BETWEEN :startDt AND :endDt
+        """)
+    List<TimerHistory> findByUserIdAndActualStartBetween(
+            @Param("userId") String userId,
+            @Param("startDt") LocalDateTime startDt,
+            @Param("endDt") LocalDateTime endDt
+    );
+
     /**
      * FAILED + delFlag='N' + historyDt가 [startDt, endDt] 구간에 '포함'되는 데이터
      * - 실패 사유 집계 (6)용
@@ -80,7 +93,6 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
         on f.id = h.focusTypeId
     where h.userId = :userId
       and h.delFlag = 'N'
-      and h.historyStatus = club.cmc.limber.domain.timerhistory.enums.HistoryStatus.SENT
       and (
             (:onlyIncomplete = false)
          or (:onlyIncomplete = true and tr.id is null)
@@ -91,6 +103,7 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
             @Param("userId") String userId,
             @Param("onlyIncomplete") boolean onlyIncomplete
     );
+//    and h.historyStatus = club.cmc.limber.domain.timerhistory.enums.HistoryStatus.SENT
 
 
     // 동일 타이머/동일 분(±59초) 기록 중복 방지
@@ -149,7 +162,6 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
         on f.id = h.focusTypeId
     where h.userId = :userId
       and h.delFlag = 'N'
-      and h.historyStatus = club.cmc.limber.domain.timerhistory.enums.HistoryStatus.SENT
       and h.actualStartTime between :start and :end
     """)
     List<FocusTimeSlice> findFocusSlices(
@@ -157,6 +169,7 @@ public interface TimerHistoryRepository extends JpaRepository<TimerHistory, Long
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );
+    //      and h.historyStatus = club.cmc.limber.domain.timerhistory.enums.HistoryStatus.SENT
 
     void deleteAllByUserId(String userId);
 
