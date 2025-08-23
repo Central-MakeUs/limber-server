@@ -140,7 +140,7 @@ public class TimerHistoryController {
                     )
             }
     )
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/user/{userId}")
     public ResponseEntity<?> delete(
             @PathVariable("userId") String userId
     ) {
